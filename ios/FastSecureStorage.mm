@@ -1,18 +1,34 @@
 #import "FastSecureStorage.h"
+#import <jsi/jsi.h>
+#import "JSIUtils.h"
+#import <React/RCTBridge+Private.h>
+#import <React/RCTUtils.h>
+#import <ReactCommon/RCTTurboModule.h>
+#import "SecureStorage.h"
+
 
 @implementation FastSecureStorage
+
 RCT_EXPORT_MODULE()
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
-RCT_EXPORT_METHOD(multiply:(double)a
-                  b:(double)b
-                  resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
 {
-    NSNumber *result = @(a * b);
+    RCTBridge *bridge = [RCTBridge currentBridge];
+    RCTCxxBridge* cxxBridge = (RCTCxxBridge*)bridge;
+    if (cxxBridge == nil) {
+        return @false;
+    }
+    
+    auto jsiRuntime = (jsi::Runtime*) cxxBridge.runtime;
+    if (jsiRuntime == nil) {
+        return @false;
+    }
 
-    resolve(result);
+    auto callInvoker = bridge.jsCallInvoker;
+    secureStorage::handleAppUninstall();
+    secureStorage::install(*(jsi::Runtime *)jsiRuntime, callInvoker);
+
+    return @true;
 }
 
 // Don't compile this code when we build for the old architecture.

@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:7.2.1"
+    classpath "com.android.tools.build:gradle:7.2.2"
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -28,6 +28,13 @@ apply plugin: "kotlin-android"
 
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
+}
+
+def resolveBuildType() {
+  Gradle gradle = getGradle()
+  String tskReqStr = gradle.getStartParameter().getTaskRequests()['args'].toString()
+
+  return tskReqStr.contains('Release') ? 'release' : 'debug'
 }
 
 def getExtOrDefault(name) {
@@ -58,16 +65,49 @@ android {
     }
   }
 
+  if (rootProject.hasProperty("ndkPath")) {
+    ndkPath rootProject.ext.ndkPath
+  }
+  if (rootProject.hasProperty("ndkVersion")) {
+    ndkVersion rootProject.ext.ndkVersion
+  }
+
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    externalNativeBuild {
+      cmake {
+        cppFlags "-O2 -frtti -fexceptions -Wall -Wno-unused-variable -fstack-protector-all"
+        arguments "-DANDROID_STL=c++_shared"
+        abiFilters (*reactNativeArchitectures())
+      }
+    }
 
+    packagingOptions {
+      doNotStrip resolveBuildType() == 'debug' ? "**/**/*.so" : ''
+      excludes = [
+        "META-INF",
+        "META-INF/**",
+        "**/libjsi.so",
+        "**/libreact_nativemodule_core.so",
+        "**/libturbomodulejsijni.so",
+        "**/libc++_shared.so",
+        "**/libfbjni.so"
+      ]
+    }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
+    }
   }
 
   buildFeatures {
+    prefab true
     buildConfig true
   }
 
@@ -114,6 +154,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "androidx.security:security-crypto-ktx:1.1.0-alpha06"
 }
 
 if (isNewArchitectureEnabled()) {

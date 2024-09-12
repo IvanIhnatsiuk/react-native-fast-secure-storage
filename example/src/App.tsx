@@ -1,17 +1,66 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-fast-secure-storage';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import { SecureStorage } from 'react-native-fast-secure-storage';
+import { MMKV } from 'react-native-mmkv';
+
+export const storage = new MMKV();
+const secureStorage = new SecureStorage();
+
+const testItems = new Array(100).fill(0).map((_, index) => {
+  return {
+    key: `key_${index}`,
+    value: `test_key_${index}`,
+    accessibleValue: 'AccessibleWhenUnlocked',
+  };
+});
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
+  const [result, setResult] = useState<string | undefined>();
+
+  const setTestValue = async () => {
+    secureStorage.setItem('test', 'test value');
+    setResult(secureStorage?.getItem('test'));
+    const started = new Date().getTime();
+    console.log(new Date().getTime() - started);
+  };
 
   useEffect(() => {
-    multiply(3, 7).then(setResult);
+    setResult(secureStorage?.getItem('test'));
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>{result}</Text>
+      <Button title="set value" onPress={setTestValue} />
+      <Button
+        title="set multiple items"
+        onPress={() => secureStorage.setItems(testItems)}
+      />
+      <Button
+        title="get value"
+        onPress={() => {
+          setResult(secureStorage.getItem('test'));
+        }}
+      />
+      <Button
+        title="get all keys"
+        onPress={() => console.log(secureStorage.getAllKeys())}
+      />
+      <Button
+        title="get all items"
+        onPress={() => console.log(secureStorage.getAllItems())}
+      />
+      <Button
+        title="clear storage"
+        onPress={() => secureStorage.clearStorage()}
+      />
+      <Button
+        title="delete value"
+        onPress={() => {
+          secureStorage.removeItem('test');
+          setResult(secureStorage.getItem('test'));
+        }}
+      />
     </View>
   );
 }
