@@ -121,35 +121,39 @@ void install(jsi::Runtime &runtime,
     });
     
     auto getItem = HOSTFN("getItem", 1) {
-        if(!arguments[0].isString()) {
-            throw jsi::JSError(runtime, "getItem: Key must be as string value");
-        }
+        jsi::Function promiseConstructor = runtime.global().getPropertyAsFunction(runtime, "Promise");
         
-        NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
-        
-        @try {
-            NSMutableDictionary *query = generateBaseQueryDictionary(key);
-            [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-            [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+        return promiseConstructor.callAsConstructor(runtime, HOSTFN("promise", 0) {
+            if(!arguments[0].isString()) {
+                throw jsi::JSError(runtime, "getItem: Key must be as string value");
+            }
             
-            CFDataRef result = nil;
-            OSStatus status = SecItemCopyMatching((CFDictionaryRef)query,(CFTypeRef *)&result);
+            NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
             
-            if(status == errSecSuccess) {
-                NSData *value = (__bridge NSData *)result;
-                if (value != nil) {
-                    NSString *result = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
-                    return Value(convertNSStringToJSIString(runtime, result));
+            @try {
+                NSMutableDictionary *query = generateBaseQueryDictionary(key);
+                [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+                [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+                
+                CFDataRef result = nil;
+                OSStatus status = SecItemCopyMatching((CFDictionaryRef)query,(CFTypeRef *)&result);
+                
+                if(status == errSecSuccess) {
+                    NSData *value = (__bridge NSData *)result;
+                    if (value != nil) {
+                        NSString *result = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
+                        return Value(convertNSStringToJSIString(runtime, result));
+                    } else {
+                        return Value();
+                    }
                 } else {
                     return Value();
                 }
-            } else {
+            }
+            @catch (NSException *exception) {
                 return Value();
             }
-        }
-        @catch (NSException *exception) {
-            return Value();
-        }
+        }));
     });
     
     auto setItems = HOSTFN("setItems", 1) {
