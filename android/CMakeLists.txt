@@ -13,6 +13,11 @@ add_library(
       src/main/cpp/bindings.h
       src/main/cpp/bindings.cpp
       src/main/cpp/cpp-adapter.cpp
+      ..cpp/macros.h
+)
+
+include_directories(
+  ../cpp
 )
 
 set_target_properties(

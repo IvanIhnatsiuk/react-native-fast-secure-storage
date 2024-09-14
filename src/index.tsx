@@ -27,4 +27,4 @@ const FastSecureStorage = FastSecureStorageModule
 
 FastSecureStorage.install();
 
-export default SecureStorage;
+export default new SecureStorage();

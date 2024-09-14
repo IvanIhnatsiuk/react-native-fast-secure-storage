@@ -2,13 +2,7 @@
 #include <jni.h>
 #include <iostream>
 #include <utility>
-
-#define HOSTFN(name, basecount)           \
-jsi::Function::createFromHostFunction( \
-runtime, \
-jsi::PropNameID::forAscii(runtime, name), \
-basecount, \
-[=](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
+#include "macros.h"
 
 using namespace facebook::jsi;
 using namespace std;
@@ -36,7 +30,7 @@ void install(
   _getAllItems = getAllItemsFn;
   _getAllKeys = getAllKeysFn;
 
-  auto setItem = HOSTFN("setItem", 1) {
+  auto setItem = CREATE_HOST_FN("setItem", 1) {
     string key = arguments[0].getString(runtime).utf8(runtime);
     string value = arguments[1].getString(runtime).utf8(runtime);
 
@@ -54,7 +48,7 @@ void install(
     return {true};
   });
 
-  auto getItem = HOSTFN("getItem", 1) {
+  auto getItem = CREATE_HOST_FN("getItem", 1) {
     string key = arguments[0].getString(runtime).utf8(runtime);
 
     try {
@@ -76,7 +70,7 @@ void install(
     return {};
   });
 
-  auto getAllItems = HOSTFN("getAllItems", 0) {
+  auto getAllItems = CREATE_HOST_FN("getAllItems", 0) {
     try {
       std::string val = _getAllItems();
 
@@ -92,7 +86,7 @@ void install(
     }
   });
 
-  auto removeItem = HOSTFN("removeItem", 1) {
+  auto removeItem = CREATE_HOST_FN("removeItem", 1) {
     string key = arguments[0].asString(runtime).utf8(runtime);
     try {
       _del(key.c_str());
@@ -104,7 +98,7 @@ void install(
     return jsi::Value(false);
   });
 
-  auto clearStorage = HOSTFN("clearStorage", 0) {
+  auto clearStorage = CREATE_HOST_FN("clearStorage", 0) {
     try {
       _clear();
 
@@ -114,7 +108,7 @@ void install(
     }
   });
 
-  auto getAllKeys = HOSTFN("getAllKeys", 0) {
+  auto getAllKeys = CREATE_HOST_FN("getAllKeys", 0) {
     try {
       auto keys = _getAllKeys();
 
@@ -126,7 +120,7 @@ void install(
     return jsi::Value(runtime, jsi::String::createFromUtf8(runtime, "[]"));
   });
 
-  auto setItems = HOSTFN("setItems", 1) {
+  auto setItems = CREATE_HOST_FN("setItems", 1) {
     try {
       auto items =
           arguments[0].getObject(runtime).asArray(runtime).asArray(runtime);

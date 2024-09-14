@@ -2,18 +2,12 @@
 #import <React/RCTBridgeModule.h>
 #import <UIKit/UIKit.h>
 #import "JSIUtils.h"
+#import "macros.h"
 
 namespace secureStorage {
 using namespace facebook;
 using namespace jsi;
 using namespace std;
-
-#define HOSTFN(name, basecount)           \
-jsi::Function::createFromHostFunction( \
-runtime, \
-jsi::PropNameID::forAscii(runtime, name), \
-basecount, \
-[=](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
 
 CFStringRef _accessibleValue(NSString *accessible)
 {
@@ -111,7 +105,7 @@ bool setSecureStorageItem(NSString *key, NSString *value, CFStringRef accessibil
 
 void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallInvoker)
 {
-  auto setItem = HOSTFN("setItem", 3)
+  auto setItem = CREATE_HOST_FN("setItem", 3)
   {
     if (!arguments[0].isString()) {
       throw jsi::JSError(runtime, "setItem: key must be a string value!");
@@ -134,7 +128,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     }
   });
 
-  auto getItem = HOSTFN("getItem", 1)
+  auto getItem = CREATE_HOST_FN("getItem", 1)
   {
     if (!arguments[0].isString()) {
       throw jsi::JSError(runtime, "getItem: key must be a string value!");
@@ -166,7 +160,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     }
   });
 
-  auto setItems = HOSTFN("setItems", 1)
+  auto setItems = CREATE_HOST_FN("setItems", 1)
   {
     NSDictionary *items = convertJSIObjectToNSDictionary(runtime, arguments[0].getObject(runtime));
     try {
@@ -184,7 +178,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     return Value();
   });
 
-  auto getAllKeys = HOSTFN("getAllKeys", 0)
+  auto getAllKeys = CREATE_HOST_FN("getAllKeys", 0)
   {
     NSMutableArray<NSString *> *keys = [NSMutableArray array];
     NSDictionary *query = @{
@@ -211,7 +205,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     return Value(convertNSArrayToJSIArray(runtime, keys));
   });
 
-  auto getAllItems = HOSTFN("getAllItems", 0)
+  auto getAllItems = CREATE_HOST_FN("getAllItems", 0)
   {
     NSMutableArray<NSDictionary *> *items = [NSMutableArray array];
     NSDictionary *query = @{
@@ -240,7 +234,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     return Value(convertNSArrayToJSIArray(runtime, items));
   });
 
-  auto hasValue = HOSTFN("hasValue", 1)
+  auto hasValue = CREATE_HOST_FN("hasValue", 1)
   {
     if (!arguments[0].isString()) {
       throw jsi::JSError(runtime, "hasValue: key must be a string!");
@@ -265,7 +259,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     }
   });
 
-  auto removeItem = HOSTFN("removeItem", 1)
+  auto removeItem = CREATE_HOST_FN("removeItem", 1)
   {
     if (!arguments[0].isString()) {
       throw jsi::JSError(runtime, "removeItem: key must be a string value");
@@ -285,7 +279,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
     }
   });
 
-  auto clearStorage = HOSTFN("clearStorage", 0)
+  auto clearStorage = CREATE_HOST_FN("clearStorage", 0)
   {
     clearSecureStorage();
 

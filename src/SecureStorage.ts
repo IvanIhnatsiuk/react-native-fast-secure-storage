@@ -76,4 +76,4 @@ class SecureStorage implements ISecureStorage {
   };
 }
 
-export default new SecureStorage();
+export default SecureStorage;
