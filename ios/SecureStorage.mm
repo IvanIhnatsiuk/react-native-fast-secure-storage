@@ -113,6 +113,14 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
 {
   auto setItem = HOSTFN("setItem", 3)
   {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "setItem: key must be a string value!");
+    }
+
+    if (!arguments[1].isString()) {
+      throw jsi::JSError(runtime, "setItem: value must be a string value!");
+    }
+
     NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
     NSString *value = convertJSIStringToNSString(runtime, arguments[1].getString(runtime));
     NSString *accessible = convertJSIStringToNSString(runtime, arguments[2].getString(runtime));
@@ -128,38 +136,34 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
 
   auto getItem = HOSTFN("getItem", 1)
   {
-    jsi::Function promiseConstructor = runtime.global().getPropertyAsFunction(runtime, "Promise");
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "getItem: key must be a string value!");
+    }
 
-        return promiseConstructor.callAsConstructor(runtime, HOSTFN("promise", 0) {
-      if (!arguments[0].isString()) {
-        throw jsi::JSError(runtime, "getItem: Key must be as string value");
-      }
+    NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
 
-      NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
+    @try {
+      NSMutableDictionary *query = generateBaseQueryDictionary(key);
+      [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+      [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
 
-      @try {
-        NSMutableDictionary *query = generateBaseQueryDictionary(key);
-        [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-        [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+      CFDataRef result = nil;
+      OSStatus status = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&result);
 
-        CFDataRef result = nil;
-        OSStatus status = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&result);
-
-        if (status == errSecSuccess) {
-          NSData *value = (__bridge NSData *)result;
-          if (value != nil) {
-            NSString *result = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
-            return Value(convertNSStringToJSIString(runtime, result));
-          } else {
-            return Value();
-          }
+      if (status == errSecSuccess) {
+        NSData *value = (__bridge NSData *)result;
+        if (value != nil) {
+          NSString *result = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
+          return Value(convertNSStringToJSIString(runtime, result));
         } else {
           return Value();
         }
-      } @catch (NSException *exception) {
+      } else {
         return Value();
       }
-        }));
+    } @catch (NSException *exception) {
+      return Value();
+    }
   });
 
   auto setItems = HOSTFN("setItems", 1)
@@ -204,7 +208,7 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
 
       return Value(convertNSArrayToJSIArray(runtime, keys));
     }
-    return Value();
+    return Value(convertNSArrayToJSIArray(runtime, keys));
   });
 
   auto getAllItems = HOSTFN("getAllItems", 0)
@@ -233,11 +237,15 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
       return Value(convertNSArrayToJSIArray(runtime, items));
     }
 
-    return Value();
+    return Value(convertNSArrayToJSIArray(runtime, items));
   });
 
   auto hasValue = HOSTFN("hasValue", 1)
   {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "hasValue: key must be a string!");
+    }
+
     NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
 
     @try {
@@ -253,12 +261,16 @@ void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallIn
       }
       return Value(false);
     } @catch (NSException *exception) {
-      return Value();
+      return Value(false);
     }
   });
 
   auto removeItem = HOSTFN("removeItem", 1)
   {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "removeItem: key must be a string value");
+    }
+
     NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
 
     @try {
