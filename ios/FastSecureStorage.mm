@@ -3,8 +3,8 @@
 #import <React/RCTUtils.h>
 #import <ReactCommon/RCTTurboModule.h>
 #import <jsi/jsi.h>
-#import "SecureStorageHostObject.h"
 #import "SecureStorage.h"
+#import "SecureStorageHostObject.h"
 
 using namespace facebook;
 
