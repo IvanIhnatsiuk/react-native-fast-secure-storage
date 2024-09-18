@@ -1,5 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 import SecureStorage from './SecureStorage';
+import { ACCESSIBLE } from './enums';
 
 const LINKING_ERROR =
   `The package 'react-native-fast-secure-storage' doesn't seem to be linked. Make sure: \n\n` +
@@ -9,7 +10,7 @@ const LINKING_ERROR =
 
 // @ts-expect-error
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
-console.log('isTurboModuleEnabled', isTurboModuleEnabled);
+
 const FastSecureStorageModule = isTurboModuleEnabled
   ? require('./NativeFastSecureStorage').default
   : NativeModules.FastSecureStorage;
@@ -26,5 +27,7 @@ const FastSecureStorage = FastSecureStorageModule
     );
 
 FastSecureStorage.install();
+
+export { ACCESSIBLE };
 
 export default new SecureStorage();

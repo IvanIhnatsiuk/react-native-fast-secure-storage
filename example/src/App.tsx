@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, Button, ScrollView, TextInput } from 'react-native';
-import SecureStorage from 'react-native-fast-secure-storage';
+import SecureStorage, { ACCESSIBLE } from 'react-native-fast-secure-storage';
 import { Rectangle } from './Reactangle';
 
 const testItems = new Array(100).fill(0).map((_, index) => {
   return {
     key: `key_${index}`,
     value: `test_key_${index}`,
-    accessibleValue: 'AccessibleWhenUnlocked',
+    accessibleValue: ACCESSIBLE.WHEN_UNLOCKED,
   };
 });
 

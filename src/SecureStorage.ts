@@ -1,4 +1,5 @@
-import type { ISecureStorage } from './types';
+import { ACCESSIBLE } from './enums';
+import type { ISecureStorage, SecureStorageItem } from './types';
 
 declare global {
   var __SecureStorage: ISecureStorage | undefined;
@@ -26,7 +27,7 @@ class SecureStorage implements ISecureStorage {
   public setItem(
     key: string,
     value: string,
-    accessible = 'AccessibleWhenUnlocked'
+    accessible = ACCESSIBLE.WHEN_UNLOCKED
   ) {
     const func = this.getFunctionFromCache('setItem');
     const result = func(key, value, accessible);
@@ -47,11 +48,10 @@ class SecureStorage implements ISecureStorage {
     return result;
   };
 
-  public setItems = (
-    items: { key: string; value: string; accessibleValue: string }[]
-  ) => {
+  public setItems = (items: SecureStorageItem[]) => {
     const func = this.getFunctionFromCache('setItems');
     const result = func(items);
+
     return result;
   };
 
