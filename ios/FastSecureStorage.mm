@@ -3,8 +3,10 @@
 #import <React/RCTUtils.h>
 #import <ReactCommon/RCTTurboModule.h>
 #import <jsi/jsi.h>
-#import "JSIUtils.h"
 #import "SecureStorage.h"
+#import "SecureStorageHostObject.h"
+
+using namespace facebook;
 
 @implementation FastSecureStorage
 
@@ -24,8 +26,17 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
   }
 
   auto callInvoker = bridge.jsCallInvoker;
-  secureStorage::handleAppUninstall();
-  secureStorage::install(*(jsi::Runtime *)jsiRuntime, callInvoker);
+  handleAppUninstall();
+  securestorageHostObject::install(
+      *(jsi::Runtime *)jsiRuntime,
+      callInvoker,
+      &setSecureStorageItem,
+      &getSecureStorageItem,
+      &deleteSecureStorageItem,
+      &clearSecureStorage,
+      &getAllKeys,
+      &getAllItems,
+      &secureStorageHasItem);
 
   return @true;
 }

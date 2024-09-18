@@ -1,13 +1,13 @@
-#import "SecureStorage.h"
-#import <React/RCTBridgeModule.h>
-#import <UIKit/UIKit.h>
-#import "JSIUtils.h"
-#import "macros.h"
+//
+//  SecureStorage.mm
+//  react-native-fast-secure-storage
+//
+//  Created by Ivan Ignathuk on 18/09/2024.
+//
 
-namespace secureStorage {
-using namespace facebook;
-using namespace jsi;
-using namespace std;
+#import "SecureStorage.h"
+#import <Foundation/Foundation.h>
+#import <Security/Security.h>
 
 CFStringRef _accessibleValue(NSString *accessible)
 {
@@ -79,13 +79,116 @@ void setServiceName(NSString *_serviceName)
   serviceName = _serviceName;
 }
 
-bool setSecureStorageItem(NSString *key, NSString *value, CFStringRef accessibilityLevel)
+std::string getAllKeys()
 {
-  NSMutableDictionary *dictionary = generateBaseQueryDictionary(key);
+  NSMutableArray<NSString *> *keys = [NSMutableArray array];
+  NSDictionary *query = @{
+    (id)kSecClass : (id)kSecClassGenericPassword,
+    (id)kSecReturnData : (id)kCFBooleanTrue,
+    (id)kSecReturnAttributes : (id)kCFBooleanTrue,
+    (id)kSecMatchLimit : (id)kSecMatchLimitAll
+  };
 
-  NSData *valueData = [value dataUsingEncoding:NSUTF8StringEncoding];
+  CFTypeRef result = NULL;
+
+  OSStatus statusCode = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
+
+  if (statusCode == noErr) {
+    NSArray<NSDictionary *> *array = (__bridge_transfer NSArray<NSDictionary *> *)result;
+    for (NSDictionary *item in array) {
+      NSString *key = [[NSString alloc] initWithData:item[(id)kSecAttrAccount]
+                                            encoding:NSUTF8StringEncoding];
+      [keys addObject:key];
+    }
+
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:keys
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    return [jsonString UTF8String];
+  }
+  return "[]";
+}
+
+std::string getAllItems()
+{
+  NSMutableArray<NSDictionary *> *items = [NSMutableArray array];
+  NSDictionary *query = @{
+    (id)kSecClass : (id)kSecClassGenericPassword,
+    (id)kSecReturnData : (id)kCFBooleanTrue,
+    (id)kSecReturnAttributes : (id)kCFBooleanTrue,
+    (id)kSecMatchLimit : (id)kSecMatchLimitAll
+  };
+  CFTypeRef result = NULL;
+
+  OSStatus statusCode = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
+
+  if (statusCode == noErr) {
+    NSArray<NSDictionary *> *array = (__bridge_transfer NSArray<NSDictionary *> *)result;
+    for (NSDictionary *item in array) {
+      NSString *key = [[NSString alloc] initWithData:item[(id)kSecAttrAccount]
+                                            encoding:NSUTF8StringEncoding];
+      NSString *value = [[NSString alloc] initWithData:item[(id)kSecValueData]
+                                              encoding:NSUTF8StringEncoding];
+      [items addObject:@{@"key" : key, @"value" : value}];
+    }
+
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:items
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    return [jsonString UTF8String];
+  }
+
+  return "[]";
+}
+
+std::string getSecureStorageItem(const char *key)
+{
+  NSString *_key = [NSString stringWithUTF8String:key];
+  NSMutableDictionary *query = generateBaseQueryDictionary(_key);
+  [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+  [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+  CFDataRef result = nil;
+  OSStatus status = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&result);
+  if (status == errSecSuccess) {
+    NSData *value = (__bridge NSData *)result;
+    if (value != nil) {
+      return [[[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding] UTF8String];
+    } else {
+      return "";
+    }
+  } else {
+    return "";
+  }
+}
+
+bool secureStorageHasItem(const char *key)
+{
+  NSString *_key = [NSString stringWithUTF8String:key];
+  NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(_key);
+  [queryDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+  [queryDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+
+  CFTypeRef result = NULL;
+  OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryDictionary, (CFTypeRef *)&result);
+
+  return status != errSecItemNotFound;
+}
+
+bool setSecureStorageItem(const char *key, const char *value, const char *accessibilityLevel)
+{
+  NSString *_key = [NSString stringWithUTF8String:key];
+  NSString *_value = [NSString stringWithUTF8String:value];
+  CFStringRef accessibleValue =
+      _accessibleValue([NSString stringWithUTF8String:accessibilityLevel]);
+  NSMutableDictionary *dictionary = generateBaseQueryDictionary(_key);
+
+  NSData *valueData = [_value dataUsingEncoding:NSUTF8StringEncoding];
   [dictionary setObject:valueData forKey:(id)kSecValueData];
-  dictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibilityLevel;
+  dictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
 
   OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, NULL);
 
@@ -94,8 +197,8 @@ bool setSecureStorageItem(NSString *key, NSString *value, CFStringRef accessibil
   } else {
     NSMutableDictionary *updateDictionary = [[NSMutableDictionary alloc] init];
     [updateDictionary setObject:valueData forKey:(id)kSecValueData];
-    updateDictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibilityLevel;
-    NSMutableDictionary *searchDictionary = generateBaseQueryDictionary(key);
+    updateDictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
+    NSMutableDictionary *searchDictionary = generateBaseQueryDictionary(_key);
     OSStatus status =
         SecItemUpdate((CFDictionaryRef)searchDictionary, (CFDictionaryRef)updateDictionary);
 
@@ -103,200 +206,10 @@ bool setSecureStorageItem(NSString *key, NSString *value, CFStringRef accessibil
   }
 }
 
-void install(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsCallInvoker)
+bool deleteSecureStorageItem(const char *key)
 {
-  auto setItem = CREATE_HOST_FN("setItem", 3)
-  {
-    if (!arguments[0].isString()) {
-      throw jsi::JSError(runtime, "setItem: key must be a string value!");
-    }
-
-    if (!arguments[1].isString()) {
-      throw jsi::JSError(runtime, "setItem: value must be a string value!");
-    }
-
-    NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
-    NSString *value = convertJSIStringToNSString(runtime, arguments[1].getString(runtime));
-    NSString *accessible = convertJSIStringToNSString(runtime, arguments[2].getString(runtime));
-    CFStringRef accessibleValue = _accessibleValue(accessible);
-
-    @try {
-      bool result = setSecureStorageItem(key, value, accessibleValue);
-      return Value(result);
-    } @catch (NSException *exception) {
-      return Value(false);
-    }
-  });
-
-  auto getItem = CREATE_HOST_FN("getItem", 1)
-  {
-    if (!arguments[0].isString()) {
-      throw jsi::JSError(runtime, "getItem: key must be a string value!");
-    }
-
-    NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
-
-    @try {
-      NSMutableDictionary *query = generateBaseQueryDictionary(key);
-      [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-      [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-
-      CFDataRef result = nil;
-      OSStatus status = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&result);
-
-      if (status == errSecSuccess) {
-        NSData *value = (__bridge NSData *)result;
-        if (value != nil) {
-          NSString *result = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
-          return Value(convertNSStringToJSIString(runtime, result));
-        } else {
-          return Value();
-        }
-      } else {
-        return Value();
-      }
-    } @catch (NSException *exception) {
-      return Value();
-    }
-  });
-
-  auto setItems = CREATE_HOST_FN("setItems", 1)
-  {
-    NSDictionary *items = convertJSIObjectToNSDictionary(runtime, arguments[0].getObject(runtime));
-    try {
-      for (NSDictionary *item in items.objectEnumerator) {
-        NSString *key = item[(id) @"key"];
-        NSString *value = item[(id) @"value"];
-        NSString *accessibleValue = item[(id) @"accessible"];
-        setSecureStorageItem(key, value, _accessibleValue(accessibleValue));
-      }
-      return Value(true);
-    } catch (NSException *exception) {
-      return Value(false);
-    }
-
-    return Value();
-  });
-
-  auto getAllKeys = CREATE_HOST_FN("getAllKeys", 0)
-  {
-    NSMutableArray<NSString *> *keys = [NSMutableArray array];
-    NSDictionary *query = @{
-      (id)kSecClass : (id)kSecClassGenericPassword,
-      (id)kSecReturnData : (id)kCFBooleanTrue,
-      (id)kSecReturnAttributes : (id)kCFBooleanTrue,
-      (id)kSecMatchLimit : (id)kSecMatchLimitAll
-    };
-
-    CFTypeRef result = NULL;
-
-    OSStatus statusCode = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
-
-    if (statusCode == noErr) {
-      NSArray<NSDictionary *> *array = (__bridge_transfer NSArray<NSDictionary *> *)result;
-      for (NSDictionary *item in array) {
-        NSString *key = [[NSString alloc] initWithData:item[(id)kSecAttrAccount]
-                                              encoding:NSUTF8StringEncoding];
-        [keys addObject:key];
-      }
-
-      return Value(convertNSArrayToJSIArray(runtime, keys));
-    }
-    return Value(convertNSArrayToJSIArray(runtime, keys));
-  });
-
-  auto getAllItems = CREATE_HOST_FN("getAllItems", 0)
-  {
-    NSMutableArray<NSDictionary *> *items = [NSMutableArray array];
-    NSDictionary *query = @{
-      (id)kSecClass : (id)kSecClassGenericPassword,
-      (id)kSecReturnData : (id)kCFBooleanTrue,
-      (id)kSecReturnAttributes : (id)kCFBooleanTrue,
-      (id)kSecMatchLimit : (id)kSecMatchLimitAll
-    };
-    CFTypeRef result = NULL;
-
-    OSStatus statusCode = SecItemCopyMatching((__bridge CFDictionaryRef)query, &result);
-
-    if (statusCode == noErr) {
-      NSArray<NSDictionary *> *array = (__bridge_transfer NSArray<NSDictionary *> *)result;
-      for (NSDictionary *item in array) {
-        NSString *key = [[NSString alloc] initWithData:item[(id)kSecAttrAccount]
-                                              encoding:NSUTF8StringEncoding];
-        NSString *value = [[NSString alloc] initWithData:item[(id)kSecValueData]
-                                                encoding:NSUTF8StringEncoding];
-        [items addObject:@{@"key" : key, @"value" : value}];
-      }
-
-      return Value(convertNSArrayToJSIArray(runtime, items));
-    }
-
-    return Value(convertNSArrayToJSIArray(runtime, items));
-  });
-
-  auto hasValue = CREATE_HOST_FN("hasValue", 1)
-  {
-    if (!arguments[0].isString()) {
-      throw jsi::JSError(runtime, "hasValue: key must be a string!");
-    }
-
-    NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
-
-    @try {
-      NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(key);
-      [queryDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-      [queryDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-
-      CFTypeRef result = NULL;
-      OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryDictionary, (CFTypeRef *)&result);
-
-      if (status != errSecItemNotFound) {
-        return Value(true);
-      }
-      return Value(false);
-    } @catch (NSException *exception) {
-      return Value(false);
-    }
-  });
-
-  auto removeItem = CREATE_HOST_FN("removeItem", 1)
-  {
-    if (!arguments[0].isString()) {
-      throw jsi::JSError(runtime, "removeItem: key must be a string value");
-    }
-
-    NSString *key = convertJSIStringToNSString(runtime, arguments[0].getString(runtime));
-
-    @try {
-      NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(key);
-      OSStatus status = SecItemDelete((CFDictionaryRef)queryDictionary);
-      if (status == errSecSuccess) {
-        return Value(true);
-      }
-      return Value(false);
-    } @catch (NSException *exception) {
-      return Value(false);
-    }
-  });
-
-  auto clearStorage = CREATE_HOST_FN("clearStorage", 0)
-  {
-    clearSecureStorage();
-
-    return Value();
-  });
-
-  jsi::Object module = jsi::Object(runtime);
-
-  module.setProperty(runtime, "setItem", setItem);
-  module.setProperty(runtime, "getItem", getItem);
-  module.setProperty(runtime, "hasValue", hasValue);
-  module.setProperty(runtime, "removeItem", removeItem);
-  module.setProperty(runtime, "clearStorage", clearStorage);
-  module.setProperty(runtime, "setItems", setItems);
-  module.setProperty(runtime, "getAllKeys", getAllKeys);
-  module.setProperty(runtime, "getAllItems", getAllItems);
-
-  runtime.global().setProperty(runtime, "__SecureStorage", std::move(module));
+  NSString *_key = [NSString stringWithUTF8String:key];
+  NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(_key);
+  OSStatus status = SecItemDelete((CFDictionaryRef)queryDictionary);
+  return status == errSecSuccess;
 }
-} // namespace secureStorage

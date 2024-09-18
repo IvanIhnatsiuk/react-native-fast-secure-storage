@@ -1,12 +1,22 @@
-#include <ReactCommon/CallInvoker.h>
-#include <jsi/jsilib.h>
+//
+//  Header.h
+//  Pods
+//
+//  Created by Ivan Ignathuk on 18/09/2024.
+//
+#import <Foundation/Foundation.h>
+#import <Security/Security.h>
+#import <iostream>
 
-namespace secureStorage {
-namespace react = facebook::react;
-namespace jsi = facebook::jsi;
-
-void install(
-    jsi::Runtime &rt,
-    std::shared_ptr<react::CallInvoker> jsCallInvoker);
+CFStringRef _accessibleValue(NSString *accessible);
+NSString *getServiceName();
+NSMutableDictionary *generateBaseQueryDictionary(NSString *key);
+void clearSecureStorage();
 void handleAppUninstall();
-} // namespace secureStorage
+void setServiceName(NSString *_serviceName);
+std::string getAllKeys();
+std::string getAllItems();
+std::string getSecureStorageItem(const char *key);
+bool secureStorageHasItem(const char *key);
+bool setSecureStorageItem(const char *key, const char *value, const char *accessibilityLevel);
+bool deleteSecureStorageItem(const char *key);

@@ -10,10 +10,10 @@ set (BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 add_library(
       ${PACKAGE_NAME}
       SHARED
-      src/main/cpp/bindings.h
-      src/main/cpp/bindings.cpp
       src/main/cpp/cpp-adapter.cpp
-      ..cpp/macros.h
+      ../cpp/macros.h
+      ../cpp/SecureStorageHostObject.cpp
+      ../cpp/SecureStorageHostObject.h
 )
 
 include_directories(

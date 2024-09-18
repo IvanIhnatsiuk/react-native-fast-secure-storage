@@ -1,7 +1,7 @@
 #ifndef macros_h
 #define macros_h
 
-#define CREATE_HOST_FN(name, basecount)           \
+#define CREATE_HOST_FN(name, basecount)   \
 jsi::Function::createFromHostFunction( \
 runtime, \
 jsi::PropNameID::forAscii(runtime, name), \
