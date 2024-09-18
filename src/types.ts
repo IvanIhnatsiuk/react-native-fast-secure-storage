@@ -8,7 +8,7 @@ export interface ISecureStorage {
   getItem(key: string): string;
   clearStorage(): boolean;
   setItems(items: SecureStorageItem[]): boolean;
-  getAllKeys(): string[];
-  getAllItems(): SecureStorageItem[];
+  getAllKeys(): Promise<string>;
+  getAllItems(): Promise<string>;
   removeItem(key: string): boolean;
 }

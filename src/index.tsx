@@ -9,7 +9,7 @@ const LINKING_ERROR =
 
 // @ts-expect-error
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
-
+console.log('isTurboModuleEnabled', isTurboModuleEnabled);
 const FastSecureStorageModule = isTurboModuleEnabled
   ? require('./NativeFastSecureStorage').default
   : NativeModules.FastSecureStorage;

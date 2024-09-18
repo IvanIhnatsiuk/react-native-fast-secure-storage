@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, Text, Button, ScrollView, TextInput } from 'react-native';
 import SecureStorage from 'react-native-fast-secure-storage';
-import { MMKV } from 'react-native-mmkv';
-
-export const storage = new MMKV();
+import { Rectangle } from './Reactangle';
 
 const testItems = new Array(100).fill(0).map((_, index) => {
   return {
@@ -15,39 +13,64 @@ const testItems = new Array(100).fill(0).map((_, index) => {
 
 export default function App() {
   const [result, setResult] = useState<string | undefined>();
+  const [text, setText] = useState('');
+
+  const getTestValue = async () => {
+    const startTime = new Date().getTime();
+    try {
+      const value = await SecureStorage.getItem('test');
+      setResult(value);
+    } catch (error) {
+      if (error instanceof Error) {
+        setResult(error.message);
+      }
+    }
+    console.log('Time taken:', new Date().getTime() - startTime);
+  };
 
   const setTestValue = async () => {
-    SecureStorage.setItem('test', 'test value');
-    setResult(SecureStorage.getItem('test'));
-    const started = new Date().getTime();
-    console.log(new Date().getTime() - started);
+    const startTime = new Date().getTime();
+    console.log(text);
+    await SecureStorage.setItem('test', 'test value');
+    console.log('Time taken:', new Date().getTime() - startTime);
+    const value = await SecureStorage.getItem('test');
+    setResult(value);
   };
 
   useEffect(() => {
-    setResult(SecureStorage.getItem('test'));
+    getTestValue();
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Rectangle />
       <Text>{result}</Text>
+      <TextInput
+        style={{ height: 50, width: '100%' }}
+        defaultValue={text}
+        onChangeText={setText}
+      />
       <Button title="set value" onPress={setTestValue} />
       <Button
         title="set multiple items"
-        onPress={() => SecureStorage.setItems(testItems)}
-      />
-      <Button
-        title="get value"
-        onPress={() => {
-          setResult(SecureStorage.getItem('test'));
+        onPress={async () => {
+          const startTime = new Date().getTime();
+          await SecureStorage.setItems(testItems);
+          console.log('Time taken:', new Date().getTime() - startTime);
         }}
       />
+      <Button title="get value" onPress={getTestValue} />
       <Button
         title="get all keys"
-        onPress={() => console.log(SecureStorage.getAllKeys())}
+        onPress={async () =>
+          console.log(JSON.parse(await SecureStorage.getAllKeys()))
+        }
       />
       <Button
         title="get all items"
-        onPress={() => console.log(SecureStorage.getAllItems())}
+        onPress={async () =>
+          console.log(JSON.parse(await SecureStorage.getAllItems()))
+        }
       />
       <Button
         title="clear storage"
@@ -55,12 +78,12 @@ export default function App() {
       />
       <Button
         title="delete value"
-        onPress={() => {
-          SecureStorage.removeItem('test');
-          setResult(SecureStorage.getItem('test'));
+        onPress={async () => {
+          await SecureStorage.removeItem('test');
+          getTestValue();
         }}
       />
-    </View>
+    </ScrollView>
   );
 }
 

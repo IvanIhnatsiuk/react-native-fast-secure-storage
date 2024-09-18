@@ -63,10 +63,8 @@ class SecureStorage implements ISecureStorage {
 
   public getAllItems = () => {
     const func = this.getFunctionFromCache('getAllItems');
-    const result = func();
 
-    console.log(result);
-    return result;
+    return func();
   };
 
   public removeItem = (key: string) => {

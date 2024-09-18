@@ -4,22 +4,13 @@
 #include <jsi/jsi.h>
 #include <iostream>
 #include <typeinfo>
-#include "bindings.h"
+#include "SecureStorageHostObject.h"
 
-namespace jni = facebook::jni;
-namespace react = facebook::react;
-namespace jsi = facebook::jsi;
+using namespace facebook;
 
-JavaVM *java_vm;
-jclass java_class;
-jobject java_object;
-
-#define HOSTFN(name, basecount)           \
-jsi::Function::createFromHostFunction( \
-runtime, \
-jsi::PropNameID::forAscii(runtime, name), \
-basecount, \
-[=](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
+static JavaVM *java_vm;
+static jclass java_class;
+static jobject java_object;
 
 /**
  * A simple callback function that allows us to detach current JNI Environment
@@ -92,7 +83,7 @@ jstring string2jstring(JNIEnv *env, const char *str) {
   return (*env).NewStringUTF(str);
 }
 
-bool setItem(const char *key, const char *value) {
+bool setItem(const char *key, const char *value, const char *accessibleValue) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID setMethodID = jniEnv->GetMethodID(
@@ -116,6 +107,32 @@ bool setItem(const char *key, const char *value) {
     throw std::runtime_error(std::string(mstr));
   }
 
+  return result;
+}
+
+bool hasItem(const char *key) {
+  JNIEnv *jniEnv = GetJniEnv();
+  java_class = jniEnv->GetObjectClass(java_object);
+  jmethodID hasItemMethodID =
+      jniEnv->GetMethodID(java_class, "hasitem", "(Ljava/lang/String;)Z");
+  jvalue params[1];
+  params[0].l = string2jstring(jniEnv, key);
+
+  bool result =
+      jniEnv->CallBooleanMethodA(java_object, hasItemMethodID, params);
+  jthrowable exObj = jniEnv->ExceptionOccurred();
+
+  if (exObj) {
+    jniEnv->ExceptionClear();
+
+    jclass clazz = jniEnv->GetObjectClass(exObj);
+    jmethodID getMessage =
+        jniEnv->GetMethodID(clazz, "toString", "()Ljava/lang/String;");
+    auto message = (jstring)jniEnv->CallObjectMethod(exObj, getMessage);
+    const char *mstr = jniEnv->GetStringUTFChars(message, NULL);
+    throw std::runtime_error(std::string(mstr));
+    return result;
+  }
   return result;
 }
 
@@ -175,13 +192,14 @@ bool deleteItem(const char *key) {
   return result;
 }
 
-bool clearStorage() {
+void clearStorage() {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID clearMethodID =
-      jniEnv->GetMethodID(java_class, "clearStorage", "()Z");
+      jniEnv->GetMethodID(java_class, "clearStorage", "()V");
   jvalue params[0];
-  jniEnv->CallBooleanMethodA(java_object, clearMethodID, params);
+  jniEnv->CallVoidMethodA(java_object, clearMethodID, params);
+
   jthrowable exObj = jniEnv->ExceptionOccurred();
 
   if (exObj) {
@@ -193,11 +211,7 @@ bool clearStorage() {
     auto message = (jstring)jniEnv->CallObjectMethod(exObj, getMessage);
     const char *mstr = jniEnv->GetStringUTFChars(message, NULL);
     throw std::runtime_error(std::string(mstr));
-
-    return false;
   }
-
-  return true;
 }
 
 std::string getAllKeys() {
@@ -259,29 +273,44 @@ std::string getAllItems() {
   return str;
 }
 
-extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
-  java_vm = jvm;
-  return JNI_VERSION_1_6;
-}
+struct FastSecureStorageBridge : jni::JavaClass<FastSecureStorageBridge> {
+  static constexpr auto kJavaDescriptor =
+      "Lcom/fastsecurestorage/FastSecureStorageBridge;";
 
-extern "C" JNIEXPORT void JNICALL
-Java_com_fastsecurestorage_FastSecureStorageBridge_initialize(
-    JNIEnv *env,
-    jobject thiz,
-    jlong jsi_ptr) {
-  auto jsiPointerRuntime = reinterpret_cast<jsi::Runtime *>(jsi_ptr);
-
-  if (jsiPointerRuntime) {
-    securestorage::install(
-        *jsiPointerRuntime,
-        *setItem,
-        *getItem,
-        *deleteItem,
-        *clearStorage,
-        *getAllKeys,
-        *getAllItems);
+  static void registerNatives() {
+    javaClassStatic()->registerNatives({
+        makeNativeMethod(
+            "installNativeJsi", FastSecureStorageBridge::installNativeJsi),
+    });
   }
 
-  env->GetJavaVM(&java_vm);
-  java_object = env->NewGlobalRef(thiz);
+ private:
+  static void installNativeJsi(
+      jni::alias_ref<jni::JObject> thiz,
+      jlong jsiPtr,
+      jni::alias_ref<react::CallInvokerHolder::javaobject>
+          jsCallInvokerHolder) {
+    auto jsCallInvoker = jsCallInvokerHolder->cthis()->getCallInvoker();
+    auto runtime = reinterpret_cast<jsi::Runtime *>(jsiPtr);
+    jni::Environment::current()->GetJavaVM(&java_vm);
+    java_object = jni::Environment::current()->NewGlobalRef(thiz.get());
+    if (runtime) {
+      securestorageHostObject::install(
+          *runtime,
+          jsCallInvoker,
+          &setItem,
+          &getItem,
+          &deleteItem,
+          &clearStorage,
+          &getAllKeys,
+          &getAllItems,
+          &hasItem);
+    }
+  }
+};
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
+  java_vm = vm;
+  return facebook::jni::initialize(
+      vm, [] { FastSecureStorageBridge::registerNatives(); });
 }
