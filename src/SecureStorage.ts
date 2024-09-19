@@ -21,6 +21,13 @@ class SecureStorage {
     return this.functionCache[functionName] as ISecureStorageNativeInstance[T];
   }
 
+  /**
+   * Stores an item in the secure storage.
+   * @param key - The key of the item.
+   * @param value - The value of the item.
+   * @param accessible - (Optional) The accessibility level of the item. Default is ACCESSIBLE.WHEN_UNLOCKED.
+   * @returns A promise that resolves to a boolean indicating the success of the operation.
+   */
   public setItem = async (
     key: string,
     value: string,
@@ -32,6 +39,11 @@ class SecureStorage {
     return result;
   };
 
+  /**
+   * Retrieves an item from the secure storage.
+   * @param key - The key of the item to retrieve.
+   * @returns A promise that resolves to the value of the item.
+   */
   public getItem = async (key: string): Promise<string> => {
     const func = this.getFunctionFromCache('getItem');
     const result = await func(key);
@@ -39,11 +51,20 @@ class SecureStorage {
     return result;
   };
 
+  /**
+   * Clears all items from the secure storage.
+   * @returns A promise that resolves when the operation is complete.
+   */
   public clearStorage = async (): Promise<void> => {
     const func = this.getFunctionFromCache('clearStorage');
     await func();
   };
 
+  /**
+   * Stores multiple items in the secure storage.
+   * @param items - An array of items to set.
+   * @returns A promise that resolves to a boolean indicating the success of the operation.
+   */
   public setItems = async (items: SecureStorageItem[]): Promise<boolean> => {
     const func = this.getFunctionFromCache('setItems');
     const result = func(items);
@@ -51,6 +72,10 @@ class SecureStorage {
     return result;
   };
 
+  /**
+   * Retrieves all keys from the secure storage.
+   * @returns A promise that resolves to an array of all keys.
+   */
   public getAllKeys = async (): Promise<StoredSecureStorageItem> => {
     const func = this.getFunctionFromCache('getAllKeys');
     const result = await func();
@@ -58,6 +83,10 @@ class SecureStorage {
     return JSON.parse(result);
   };
 
+  /**
+   * Retrieves all items from the secure storage.
+   * @returns A promise that resolves to an array of all items.
+   */
   public getAllItems = async (): Promise<StoredSecureStorageItem> => {
     const func = this.getFunctionFromCache('getAllItems');
     const result = await func();
@@ -65,6 +94,11 @@ class SecureStorage {
     return JSON.parse(result);
   };
 
+  /**
+   * Removes an item from the secure storage.
+   * @param key - The key of the item to remove.
+   * @returns A promise that resolves to a boolean indicating the success of the operation.
+   */
   public removeItem = async (key: string): Promise<boolean> => {
     const func = this.getFunctionFromCache('removeItem');
     const result = await func(key);
@@ -72,6 +106,11 @@ class SecureStorage {
     return result;
   };
 
+  /**
+   * Checks if an item exists in the secure storage.
+   * @param key - The key of the item to check.
+   * @returns A promise that resolves to a boolean indicating whether the item exists.
+   */
   public hasItem = async (key: string): Promise<boolean> => {
     const func = this.getFunctionFromCache('hasItem');
     const result = await func(key);
