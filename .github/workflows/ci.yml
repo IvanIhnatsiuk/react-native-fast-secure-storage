@@ -159,8 +159,7 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build example for iOS
-        run: |
-          set -o pipefail && xcodebuild \
+        run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
           -derivedDataPath build -UseModernBuildSystem=YES \
           -workspace FastSecureStorageExample.xcworkspace \
@@ -169,4 +168,4 @@ jobs:
           -configuration Debug \
           -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
           build \
-          CODE_SIGNING_ALLOWED=NO | xcpretty
+          CODE_SIGNING_ALLOWED=NO | xcpretty"
