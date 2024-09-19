@@ -107,7 +107,11 @@ jobs:
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios:
+    name: Build iOS Example App
     runs-on: macos-14
+    defaults:
+      run:
+        working-directory: example/ios
     env:
       TURBO_CACHE_DIR: .turbo/ios
     steps:
@@ -130,35 +134,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turborepo-ios-
 
-      - name: Check turborepo cache for iOS
-        run: |
-          TURBO_CACHE_STATUS=$(node -p "($(yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}" --dry=json)).tasks.find(t => t.task === 'build:ios').cache.status")
-
-          if [[ $TURBO_CACHE_STATUS == "HIT" ]]; then
-            echo "turbo_cache_hit=1" >> $GITHUB_ENV
-          fi
-
-      - name: Cache cocoapods
-        if: env.turbo_cache_hit != 1
-        id: cocoapods-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/ios/Pods
-          key: ${{ runner.os }}-cocoapods-${{ hashFiles('example/ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cocoapods-
-
-      - name: Install cocoapods
-        run: |
-          cd example/ios
-          pod install
-        env:
-          NO_FLIPPER: 1
+      - name: Install Pods
+        run: pod install
       - name: Install xcpretty
         run: gem install xcpretty
-      - name: Build example for iOS
-        run: cd example/ios && "set -o pipefail && xcodebuild \
+      - name: Build App
+        run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
           -derivedDataPath build -UseModernBuildSystem=YES \
           -workspace FastSecureStorageExample.xcworkspace \
