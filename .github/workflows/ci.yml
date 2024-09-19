@@ -156,7 +156,17 @@ jobs:
           pod install
         env:
           NO_FLIPPER: 1
-
+      - name: Install xcpretty
+        run: gem install xcpretty
       - name: Build example for iOS
         run: |
-          yarn clean && yarn turbo build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+          set -o pipefail && xcodebuild \
+          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
+          -derivedDataPath build -UseModernBuildSystem=YES \
+          -workspace FastSecureStorageExample.xcworkspace \
+          -scheme FastSecureStorageExample \
+          -sdk iphonesimulator \
+          -configuration Debug \
+          -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+          build \
+          CODE_SIGNING_ALLOWED=NO | xcpretty
