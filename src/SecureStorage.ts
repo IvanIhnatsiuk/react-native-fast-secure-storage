@@ -1,75 +1,78 @@
 import { ACCESSIBLE } from './enums';
-import type { ISecureStorage, SecureStorageItem } from './types';
+import type {
+  ISecureStorage,
+  SecureStorageItem,
+  StoredSecureStorageItem,
+  ISecureStorageNativeInstance,
+} from './types';
 
 declare global {
-  var __SecureStorage: ISecureStorage | undefined;
+  var __SecureStorage: ISecureStorageNativeInstance | undefined;
 }
 
-class SecureStorage implements ISecureStorage {
-  private functionCache: Partial<ISecureStorage> = {};
+class SecureStorage {
+  private functionCache: Partial<ISecureStorageNativeInstance> = {};
 
-  private nativeInstance?: ISecureStorage = global.__SecureStorage;
-
-  constructor() {
-    this.functionCache = {};
-  }
+  private nativeInstance = globalThis.__SecureStorage;
 
   private getFunctionFromCache<T extends keyof ISecureStorage>(
     functionName: T
-  ): ISecureStorage[T] {
+  ): ISecureStorageNativeInstance[T] {
     if (!this.functionCache[functionName]) {
       this.functionCache[functionName] = this.nativeInstance?.[functionName];
     }
 
-    return this.functionCache[functionName] as ISecureStorage[T];
+    return this.functionCache[functionName] as ISecureStorageNativeInstance[T];
   }
 
-  public setItem(
+  public setItem = async (
     key: string,
     value: string,
     accessible = ACCESSIBLE.WHEN_UNLOCKED
-  ) {
+  ): Promise<boolean> => {
     const func = this.getFunctionFromCache('setItem');
-    const result = func(key, value, accessible);
+    const result = await func(key, value, accessible);
 
-    return result;
-  }
-
-  public getItem(key: string) {
-    const func = this.getFunctionFromCache('getItem');
-
-    const result = func(key);
-    return result;
-  }
-
-  public clearStorage = () => {
-    const func = this.getFunctionFromCache('clearStorage');
-    const result = func();
     return result;
   };
 
-  public setItems = (items: SecureStorageItem[]) => {
+  public getItem = async (key: string): Promise<string> => {
+    const func = this.getFunctionFromCache('getItem');
+    const result = await func(key);
+
+    return result;
+  };
+
+  public clearStorage = async (): Promise<void> => {
+    const func = this.getFunctionFromCache('clearStorage');
+    await func();
+  };
+
+  public setItems = async (items: SecureStorageItem[]): Promise<boolean> => {
     const func = this.getFunctionFromCache('setItems');
     const result = func(items);
 
     return result;
   };
 
-  public getAllKeys = () => {
+  public getAllKeys = async (): Promise<StoredSecureStorageItem> => {
     const func = this.getFunctionFromCache('getAllKeys');
-    const result = func();
-    return result;
+    const result = await func();
+
+    return JSON.parse(result);
   };
 
-  public getAllItems = () => {
+  public getAllItems = async (): Promise<StoredSecureStorageItem> => {
     const func = this.getFunctionFromCache('getAllItems');
+    const result = await func();
 
-    return func();
+    return JSON.parse(result);
   };
 
-  public removeItem = (key: string) => {
+  public removeItem = async (key: string): Promise<boolean> => {
     const func = this.getFunctionFromCache('removeItem');
-    const result = func(key);
+    const result = await func(key);
+
     return result;
   };
 }
