@@ -113,8 +113,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-  
-      - uses: maxim-lobanov/setup-xcode@v1
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "15.4"
 
@@ -158,4 +159,4 @@ jobs:
 
       - name: Build example for iOS
         run: |
-          yarn turbo run build:ios
+          yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
