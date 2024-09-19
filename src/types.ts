@@ -1,5 +1,9 @@
 import type { ACCESSIBLE } from './enums';
 
+declare global {
+  var __SecureStorage: ISecureStorageNativeInstance | undefined;
+}
+
 export type StoredSecureStorageItem = {
   key: string;
   value: string;
@@ -21,6 +25,7 @@ export interface ISecureStorage {
   getAllKeys(): Promise<StoredSecureStorageItem>;
   getAllItems(): Promise<StoredSecureStorageItem>;
   removeItem(key: string): Promise<boolean>;
+  hasItem(key: string): Promise<boolean>;
 }
 
 export interface ISecureStorageNativeInstance

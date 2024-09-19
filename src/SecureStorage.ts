@@ -6,10 +6,6 @@ import type {
   ISecureStorageNativeInstance,
 } from './types';
 
-declare global {
-  var __SecureStorage: ISecureStorageNativeInstance | undefined;
-}
-
 class SecureStorage {
   private functionCache: Partial<ISecureStorageNativeInstance> = {};
 
@@ -71,6 +67,13 @@ class SecureStorage {
 
   public removeItem = async (key: string): Promise<boolean> => {
     const func = this.getFunctionFromCache('removeItem');
+    const result = await func(key);
+
+    return result;
+  };
+
+  public hasItem = async (key: string): Promise<boolean> => {
+    const func = this.getFunctionFromCache('hasItem');
     const result = await func(key);
 
     return result;
