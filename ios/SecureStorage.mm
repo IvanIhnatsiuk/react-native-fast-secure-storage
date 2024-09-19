@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
 
-CFStringRef _accessibleValue(NSString *accessible)
+CFStringRef _accessibleValue(const std::string accessible)
 {
+  NSString *accessibleNSString = [[NSString alloc] initWithUTF8String:accessible.c_str()];
+    
   NSDictionary *list = @{
     @"AccessibleWhenUnlocked" : (__bridge id)kSecAttrAccessibleWhenUnlocked,
     @"AccessibleAfterFirstUnlock" : (__bridge id)kSecAttrAccessibleAfterFirstUnlock,
@@ -24,7 +26,7 @@ CFStringRef _accessibleValue(NSString *accessible)
     @"AccessibleAlwaysThisDeviceOnly" : (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly
   };
 
-  return (__bridge CFStringRef)list[accessible];
+  return (__bridge CFStringRef)list[accessibleNSString];
 }
 
 NSString *serviceName = nil;
@@ -38,14 +40,16 @@ NSString *getServiceName()
   return serviceName;
 }
 
-NSMutableDictionary *generateBaseQueryDictionary(NSString *key)
+NSMutableDictionary *generateBaseQueryDictionary(const std::string key)
 {
-  NSMutableDictionary *baseQueryDictionary = [NSMutableDictionary new];
+    NSMutableDictionary *baseQueryDictionary = [[NSMutableDictionary alloc] init];
   [baseQueryDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
-  NSData *encodedIdentifier = [key dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *encodedIdentifier = [NSData dataWithBytes:key.data()
+                                             length:key.length()];
   [baseQueryDictionary setObject:encodedIdentifier forKey:(id)kSecAttrGeneric];
   [baseQueryDictionary setObject:encodedIdentifier forKey:(id)kSecAttrAccount];
   [baseQueryDictionary setObject:getServiceName() forKey:(id)kSecAttrService];
+
 
   return baseQueryDictionary;
 }
@@ -145,10 +149,9 @@ std::string getAllItems()
   return "[]";
 }
 
-std::string getSecureStorageItem(const char *key)
+std::string getSecureStorageItem(const std::string key)
 {
-  NSString *_key = [NSString stringWithUTF8String:key];
-  NSMutableDictionary *query = generateBaseQueryDictionary(_key);
+  NSMutableDictionary *query = generateBaseQueryDictionary(key);
   [query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
   [query setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
   CFDataRef result = nil;
@@ -165,10 +168,9 @@ std::string getSecureStorageItem(const char *key)
   }
 }
 
-bool secureStorageHasItem(const char *key)
+bool secureStorageHasItem(const std::string key)
 {
-  NSString *_key = [NSString stringWithUTF8String:key];
-  NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(_key);
+  NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(key);
   [queryDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
   [queryDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
 
@@ -178,38 +180,36 @@ bool secureStorageHasItem(const char *key)
   return status != errSecItemNotFound;
 }
 
-bool setSecureStorageItem(const char *key, const char *value, const char *accessibilityLevel)
+bool setSecureStorageItem(const std::string key, const std::string value, const std::string accessible)
 {
-  NSString *_key = [NSString stringWithUTF8String:key];
-  NSString *_value = [NSString stringWithUTF8String:value];
-  CFStringRef accessibleValue =
-      _accessibleValue([NSString stringWithUTF8String:accessibilityLevel]);
-  NSMutableDictionary *dictionary = generateBaseQueryDictionary(_key);
+  NSMutableDictionary *dictionary = generateBaseQueryDictionary(key);
+    NSData *valueData = [NSData dataWithBytes:value.data()
+                                       length:value.length()];
+      CFStringRef accessibleValue = _accessibleValue(accessible);
+    [dictionary setObject:valueData forKey:(id)kSecValueData];
+    dictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
+    
+    OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, NULL);
 
-  NSData *valueData = [_value dataUsingEncoding:NSUTF8StringEncoding];
-  [dictionary setObject:valueData forKey:(id)kSecValueData];
-  dictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
+      if (status == errSecSuccess) {
+        return true;
+      } else {
+        NSMutableDictionary *updateDictionary = [[NSMutableDictionary alloc] init];
+        [updateDictionary setObject:valueData forKey:(id)kSecValueData];
+        updateDictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
+        NSMutableDictionary *searchDictionary = generateBaseQueryDictionary(key);
+        OSStatus status =
+            SecItemUpdate((CFDictionaryRef)searchDictionary, (CFDictionaryRef)updateDictionary);
 
-  OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, NULL);
-
-  if (status == errSecSuccess) {
+        return status == errSecSuccess;
+      }
+    
     return true;
-  } else {
-    NSMutableDictionary *updateDictionary = [[NSMutableDictionary alloc] init];
-    [updateDictionary setObject:valueData forKey:(id)kSecValueData];
-    updateDictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
-    NSMutableDictionary *searchDictionary = generateBaseQueryDictionary(_key);
-    OSStatus status =
-        SecItemUpdate((CFDictionaryRef)searchDictionary, (CFDictionaryRef)updateDictionary);
-
-    return status == errSecSuccess;
-  }
 }
 
-bool deleteSecureStorageItem(const char *key)
+bool deleteSecureStorageItem(const std::string key)
 {
-  NSString *_key = [NSString stringWithUTF8String:key];
-  NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(_key);
+  NSMutableDictionary *queryDictionary = generateBaseQueryDictionary(key);
   OSStatus status = SecItemDelete((CFDictionaryRef)queryDictionary);
   return status == errSecSuccess;
 }

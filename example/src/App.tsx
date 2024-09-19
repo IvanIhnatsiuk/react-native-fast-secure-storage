@@ -30,7 +30,6 @@ export default function App() {
 
   const setTestValue = async () => {
     const startTime = new Date().getTime();
-    console.log(text);
     await SecureStorage.setItem('test', 'test value');
     console.log('Time taken:', new Date().getTime() - startTime);
     const value = await SecureStorage.getItem('test');
