@@ -62,15 +62,11 @@ export default function App() {
       <Button title="get value" onPress={getTestValue} />
       <Button
         title="get all keys"
-        onPress={async () =>
-          console.log(JSON.parse(await SecureStorage.getAllKeys()))
-        }
+        onPress={async () => console.log(await SecureStorage.getAllKeys())}
       />
       <Button
         title="get all items"
-        onPress={async () =>
-          console.log(JSON.parse(await SecureStorage.getAllItems()))
-        }
+        onPress={async () => console.log(await SecureStorage.getAllItems())}
       />
       <Button
         title="clear storage"
