@@ -150,7 +150,6 @@ jobs:
             ${{ runner.os }}-cocoapods-
 
       - name: Install cocoapods
-        if: env.turbo_cache_hit != 1 && steps.cocoapods-cache.outputs.cache-hit != 'true'
         run: |
           cd example/ios
           pod install
@@ -159,7 +158,7 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build example for iOS
-        run: "set -o pipefail && xcodebuild \
+        run: cd example/ios && "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
           -derivedDataPath build -UseModernBuildSystem=YES \
           -workspace FastSecureStorageExample.xcworkspace \
