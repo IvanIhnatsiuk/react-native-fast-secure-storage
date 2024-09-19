@@ -107,7 +107,6 @@ jobs:
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios:
-    name: Build App
     runs-on: macos-14
     env:
       TURBO_CACHE_DIR: .turbo/ios
@@ -120,8 +119,11 @@ jobs:
         with:
           xcode-version: "15.4"
 
+      - name: Setup
+        uses: ./.github/actions/setup
+
       - name: Cache turborepo for iOS
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.TURBO_CACHE_DIR }}
           key: ${{ runner.os }}-turborepo-ios-${{ hashFiles('yarn.lock') }}
@@ -139,7 +141,7 @@ jobs:
       - name: Cache cocoapods
         if: env.turbo_cache_hit != 1
         id: cocoapods-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             **/ios/Pods
@@ -157,4 +159,4 @@ jobs:
 
       - name: Build example for iOS
         run: |
-          yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+          yarn turbo build:ios --cache-dir={{ env.TURBO_CACHE_DIR }}
