@@ -8,13 +8,13 @@ using namespace facebook;
 using namespace jsi;
 using namespace std;
 
-function<bool(const string , const string , const string )> _set;
-function<const string(const string )> _get;
-function<bool(const string )> _del;
+function<bool(const string, const string, const string)> _set;
+function<const string(const string)> _get;
+function<bool(const string)> _del;
 function<void()> _clearStorage;
 function<string()> _getAllKeys;
 function<string()> _getAllItems;
-function<bool(const string )> _hasItem;
+function<bool(const string)> _hasItem;
 
 jsi::Value generateJSError(jsi::Runtime &runtime, string errorMessage) {
   auto errorCtr = runtime.global().getPropertyAsFunction(runtime, "Error");
@@ -31,13 +31,13 @@ struct KeyValue {
 void install(
     jsi::Runtime &runtime,
     shared_ptr<react::CallInvoker> jsCallInvoker,
-    function<bool(const string , const string , const string )> setItemFn,
-    function<string(const string )> getItemFn,
-    function<bool(const string )> delItemFn,
+    function<bool(const string, const string, const string)> setItemFn,
+    function<string(const string)> getItemFn,
+    function<bool(const string)> delItemFn,
     function<void()> clearStorageFn,
     function<string()> getAllkeysFn,
     function<string()> getAllItemsFn,
-    function<bool(const string )> hasItemFn)
+    function<bool(const string)> hasItemFn)
 
 {
   _set = setItemFn;
@@ -58,7 +58,8 @@ void install(
 
     const std::string key = arguments[0].getString(runtime).utf8(runtime);
     const std::string value = arguments[1].getString(runtime).utf8(runtime);
-    const std::string accessible = arguments[2].getString(runtime).utf8(runtime);
+    const std::string accessible =
+        arguments[2].getString(runtime).utf8(runtime);
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
     return promise.callAsConstructor(
         runtime,
@@ -80,8 +81,7 @@ void install(
                            reject = std::move(reject),
                            jsCallInvoker = jsCallInvoker,
                            &runtime]() {
-                bool result =
-                    _set(key, value, accessible);
+                bool result = _set(key, value, accessible);
                 jsCallInvoker->invokeAsync(
                     [resolve, reject, result, &runtime]() {
                       if (result) {
@@ -104,15 +104,16 @@ void install(
     auto items = arguments[0].getObject(runtime).getArray(runtime);
     std::vector<KeyValue> itemsArray;
     size_t size = items.size(runtime);
+    itemsArray.reserve(size);
     for (int i = 0; i < size; i++) {
       auto item = items.getValueAtIndex(runtime, i).getObject(runtime);
-      auto key =
+      const auto key =
           item.getProperty(runtime, "key").asString(runtime).utf8(runtime);
-      auto value =
+      const auto value =
           item.getProperty(runtime, "value").asString(runtime).utf8(runtime);
-      auto accessibleValue = item.getProperty(runtime, "accessibleValue")
-                                 .asString(runtime)
-                                 .utf8(runtime);
+      const auto accessibleValue = item.getProperty(runtime, "accessibleValue")
+                                       .asString(runtime)
+                                       .utf8(runtime);
       itemsArray.push_back({key, value, accessibleValue});
     }
 
@@ -137,10 +138,7 @@ void install(
                            &runtime]() {
                 try {
                   for (const auto &item : itemsArray) {
-                    const auto key = item.key;
-                    const auto value = item.value;
-                    const auto accessibleValue = item.accessibleValue;
-                    _set(key, value, accessibleValue);
+                    _set(item.key, item.value, item.accessibleValue);
                   }
                   jsCallInvoker->invokeAsync([resolve, reject, &runtime]() {
                     resolve->asObject(runtime).asFunction(runtime).call(

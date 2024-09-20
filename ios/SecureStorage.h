@@ -18,5 +18,8 @@ std::string getAllKeys();
 std::string getAllItems();
 std::string getSecureStorageItem(const std::string key);
 bool secureStorageHasItem(const std::string key);
-bool setSecureStorageItem(const std::string key,const std::string value, const std::string accessibleValue);
+bool setSecureStorageItem(
+    const std::string key,
+    const std::string value,
+    const std::string accessibleValue);
 bool deleteSecureStorageItem(const std::string key);
