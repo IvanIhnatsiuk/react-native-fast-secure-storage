@@ -6,7 +6,7 @@ import type {
   ISecureStorageNativeInstance,
 } from './types';
 
-class SecureStorage {
+class SecureStorage implements ISecureStorage {
   private functionCache: Partial<ISecureStorageNativeInstance> = {};
 
   private nativeInstance = globalThis.__SecureStorage;
