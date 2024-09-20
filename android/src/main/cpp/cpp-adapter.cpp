@@ -79,11 +79,14 @@ JNIEnv *GetJniEnv() {
   return env;
 }
 
-jstring string2jstring(JNIEnv *env, const char *str) {
-  return (*env).NewStringUTF(str);
+jstring string2jstring(JNIEnv *env, const std::string str) {
+  return (*env).NewStringUTF(str.c_str());
 }
 
-bool setItem(const char *key, const char *value, const char *accessibleValue) {
+bool setItem(
+    const std::string key,
+    const std::string value,
+    const std::string accessibleValue) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID setMethodID = jniEnv->GetMethodID(
@@ -110,7 +113,7 @@ bool setItem(const char *key, const char *value, const char *accessibleValue) {
   return result;
 }
 
-bool hasItem(const char *key) {
+bool hasItem(const std::string key) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID hasItemMethodID =
@@ -136,7 +139,7 @@ bool hasItem(const char *key) {
   return result;
 }
 
-std::string getItem(const char *key) {
+std::string getItem(const std::string key) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID getItemMethodID = jniEnv->GetMethodID(
@@ -167,7 +170,7 @@ std::string getItem(const char *key) {
   return str;
 }
 
-bool deleteItem(const char *key) {
+bool deleteItem(const std::string key) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID deleteMethodID =
