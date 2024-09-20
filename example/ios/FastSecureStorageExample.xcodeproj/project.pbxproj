@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* FastSecureStorageExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FastSecureStorageExampleTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-FastSecureStorageExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-FastSecureStorageExample.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a */; };
+		188C47BA551C5323814A191B /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C18E2604937D102CDDFCF0AD /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a */; };
+		632AD081A2F6C923B575087B /* libPods-FastSecureStorageExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 879F931BBC4C3848CB626344 /* libPods-FastSecureStorageExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9C61647F74B17B15CD5A03F6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A70AAF2BD10695A40E2C4C6F /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -38,14 +38,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FastSecureStorageExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FastSecureStorageExample/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = FastSecureStorageExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-FastSecureStorageExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample.debug.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-FastSecureStorageExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample.release.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-FastSecureStorageExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FastSecureStorageExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		46486AB36A6B8144D95C8296 /* Pods-FastSecureStorageExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample.debug.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample.debug.xcconfig"; sourceTree = "<group>"; };
+		52C1F7AC4320807CF4F221F0 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FastSecureStorageExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		879F931BBC4C3848CB626344 /* libPods-FastSecureStorageExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FastSecureStorageExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E14AD571989FBDF9CE15413 /* Pods-FastSecureStorageExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample.release.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample.release.xcconfig"; sourceTree = "<group>"; };
 		A70AAF2BD10695A40E2C4C6F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FastSecureStorageExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C18E2604937D102CDDFCF0AD /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE8CA3F8305DE20F52070215 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig"; path = "Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -54,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a in Frameworks */,
+				188C47BA551C5323814A191B /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-FastSecureStorageExample.a in Frameworks */,
+				632AD081A2F6C923B575087B /* libPods-FastSecureStorageExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,8 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-FastSecureStorageExample.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a */,
+				879F931BBC4C3848CB626344 /* libPods-FastSecureStorageExample.a */,
+				C18E2604937D102CDDFCF0AD /* libPods-FastSecureStorageExample-FastSecureStorageExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,10 +145,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-FastSecureStorageExample.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-FastSecureStorageExample.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig */,
+				46486AB36A6B8144D95C8296 /* Pods-FastSecureStorageExample.debug.xcconfig */,
+				9E14AD571989FBDF9CE15413 /* Pods-FastSecureStorageExample.release.xcconfig */,
+				52C1F7AC4320807CF4F221F0 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig */,
+				CE8CA3F8305DE20F52070215 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -160,12 +160,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "FastSecureStorageExampleTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				0D1A5D7C2DCB5FF156E2481B /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+				A826A4567F3A5E8B5D51128D /* [CP] Embed Pods Frameworks */,
+				39703392077D708D854F073A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -181,13 +181,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "FastSecureStorageExample" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				4F2A41549F9EF9A7F364CD21 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				02A684546257074506A7F898 /* [CP] Embed Pods Frameworks */,
+				3A18032D70B1D27B145D77DC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -271,7 +271,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		02A684546257074506A7F898 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -288,7 +288,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		0D1A5D7C2DCB5FF156E2481B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -310,7 +310,41 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		39703392077D708D854F073A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3A18032D70B1D27B145D77DC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4F2A41549F9EF9A7F364CD21 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -332,7 +366,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		A826A4567F3A5E8B5D51128D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -347,40 +381,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample/Pods-FastSecureStorageExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FastSecureStorageExample-FastSecureStorageExampleTests/Pods-FastSecureStorageExample-FastSecureStorageExampleTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -416,7 +416,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 52C1F7AC4320807CF4F221F0 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -443,7 +443,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig */;
+			baseConfigurationReference = CE8CA3F8305DE20F52070215 /* Pods-FastSecureStorageExample-FastSecureStorageExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -467,7 +467,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-FastSecureStorageExample.debug.xcconfig */;
+			baseConfigurationReference = 46486AB36A6B8144D95C8296 /* Pods-FastSecureStorageExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -494,7 +494,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-FastSecureStorageExample.release.xcconfig */;
+			baseConfigurationReference = 9E14AD571989FBDF9CE15413 /* Pods-FastSecureStorageExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
