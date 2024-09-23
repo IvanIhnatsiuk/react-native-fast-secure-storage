@@ -8,7 +8,7 @@
 #import <Security/Security.h>
 #import <iostream>
 
-CFStringRef _accessibleValue(const std::string accessible);
+CFStringRef _accessibleValue(const int accessible);
 NSString *getServiceName();
 NSMutableDictionary *generateBaseQueryDictionary(const std::string key);
 void clearSecureStorage();
@@ -21,5 +21,5 @@ bool secureStorageHasItem(const std::string key);
 bool setSecureStorageItem(
     const std::string key,
     const std::string value,
-    const std::string accessibleValue);
+    const int accessibleValue);
 bool deleteSecureStorageItem(const std::string key);

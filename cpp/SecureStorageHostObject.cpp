@@ -8,7 +8,7 @@ using namespace facebook;
 using namespace jsi;
 using namespace std;
 
-function<bool(const string, const string, const string)> _set;
+function<bool(const string, const string, const int)> _set;
 function<const string(const string)> _get;
 function<bool(const string)> _del;
 function<void()> _clearStorage;
@@ -25,13 +25,13 @@ jsi::Value generateJSError(jsi::Runtime &runtime, string errorMessage) {
 struct KeyValue {
   string key;
   string value;
-  string accessibleValue;
+  int accessibleValue;
 };
 
 void install(
     jsi::Runtime &runtime,
     shared_ptr<react::CallInvoker> jsCallInvoker,
-    function<bool(const string, const string, const string)> setItemFn,
+    function<bool(const string, const string, const int)> setItemFn,
     function<string(const string)> getItemFn,
     function<bool(const string)> delItemFn,
     function<void()> clearStorageFn,
@@ -58,8 +58,8 @@ void install(
 
     const std::string key = arguments[0].getString(runtime).utf8(runtime);
     const std::string value = arguments[1].getString(runtime).utf8(runtime);
-    const std::string accessible =
-        arguments[2].getString(runtime).utf8(runtime);
+    const int accessible =
+        arguments[2].getNumber();
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
     return promise.callAsConstructor(
         runtime,
@@ -112,9 +112,8 @@ void install(
       const auto value =
           item.getProperty(runtime, "value").asString(runtime).utf8(runtime);
       const auto accessibleValue = item.getProperty(runtime, "accessibleValue")
-                                       .asString(runtime)
-                                       .utf8(runtime);
-      itemsArray.push_back({key, value, accessibleValue});
+            .getNumber();
+        itemsArray.push_back({key, value, static_cast<int>(accessibleValue)});
     }
 
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
