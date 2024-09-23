@@ -22,10 +22,10 @@ class FastSecureStoragePackage : TurboReactPackage() {
       moduleInfos[FastSecureStorageModule.NAME] = ReactModuleInfo(
         FastSecureStorageModule.NAME,
         FastSecureStorageModule.NAME,
-        false,  // canOverrideExistingModule
-        false,  // needsEagerInit
-        true,  // hasConstants
-        false,  // isCxxModule
+        false, // canOverrideExistingModule
+        false, // needsEagerInit
+        true, // hasConstants
+        false, // isCxxModule
         true // isTurboModule
       )
       moduleInfos

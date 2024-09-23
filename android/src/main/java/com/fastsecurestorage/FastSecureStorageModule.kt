@@ -8,28 +8,28 @@ import com.facebook.react.module.annotations.ReactModule
 
 @ReactModule(name = FastSecureStorageModule.NAME)
 class FastSecureStorageModule(private val reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(
-        reactContext
-    ) {
-    private val bridge = FastSecureStorageBridge(reactContext)
+  ReactContextBaseJavaModule(
+    reactContext
+  ) {
+  private val bridge = FastSecureStorageBridge(reactContext)
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun install(): Boolean {
-        try {
-            System.loadLibrary("react-native-fast-secure-storage")
-            bridge.install(reactApplicationContext)
-            return true
-        } catch (exception: Exception) {
-            Log.e(NAME, "Failed to install JSI Bindings!", exception)
-            return false
-        }
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  fun install(): Boolean {
+    try {
+      System.loadLibrary("react-native-fast-secure-storage")
+      bridge.install(reactApplicationContext)
+      return true
+    } catch (exception: Exception) {
+      Log.e(NAME, "Failed to install JSI Bindings!", exception)
+      return false
     }
+  }
 
-    override fun getName(): String {
-        return NAME
-    }
+  override fun getName(): String {
+    return NAME
+  }
 
-    companion object {
-        const val NAME: String = "FastSecureStorage"
-    }
+  companion object {
+    const val NAME: String = "FastSecureStorage"
+  }
 }
