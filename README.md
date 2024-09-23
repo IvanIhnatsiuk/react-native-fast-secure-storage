@@ -187,6 +187,14 @@ console.log(result) // output: true
 
 ```
 
+## Testing
+
+This library includes a built in mock for Jest. To use it, add the following code to the jest setup file:
+
+```ts
+jest.mock('react-native-safe-area-context', () => require("react-native-fast-secure-storage/jest"));
+```
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

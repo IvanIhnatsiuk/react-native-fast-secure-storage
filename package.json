@@ -13,6 +13,7 @@
     "ios",
     "cpp",
     "*.podspec",
+    "jest",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -131,6 +132,9 @@
           "useTabs": false
         }
       ]
+    },
+    "globals": {
+      "jest": "readonly"
     }
   },
   "eslintIgnore": [
