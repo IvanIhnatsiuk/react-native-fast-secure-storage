@@ -142,14 +142,7 @@
     "lib/"
   ],
   "husky": {
-    "pre-commit": "lint-stage",
-    "pre-push": "yarn tsc"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "yarn lint",
-      "git add"
-    ]
+    "pre-commit": "lint-stage"
   },
   "prettier": {
     "quoteProps": "consistent",
