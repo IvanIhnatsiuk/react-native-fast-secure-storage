@@ -292,9 +292,9 @@ void install(
             }));
   });
 
-  auto hasValue = CREATE_HOST_FN("hasValue", 1) {
+  auto hasItem = CREATE_HOST_FN("hasItem", 1) {
     if (!arguments[0].isString()) {
-      throw jsi::JSError(runtime, "hasValue: key must be a string!");
+      throw jsi::JSError(runtime, "hasItem: key must be a string!");
     }
     auto key = arguments[0].getString(runtime).utf8(runtime);
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
@@ -411,7 +411,7 @@ void install(
 
   module.setProperty(runtime, "setItem", setItem);
   module.setProperty(runtime, "getItem", getItem);
-  module.setProperty(runtime, "hasValue", hasValue);
+  module.setProperty(runtime, "hasItem", hasItem);
   module.setProperty(runtime, "removeItem", removeItem);
   module.setProperty(runtime, "clearStorage", clearStorage);
   module.setProperty(runtime, "setItems", setItems);
