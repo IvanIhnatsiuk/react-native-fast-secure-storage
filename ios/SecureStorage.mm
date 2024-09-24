@@ -10,35 +10,35 @@
 #import <Security/Security.h>
 
 typedef NS_ENUM(NSInteger, AccessibilityLevel) {
-    AccessibleWhenUnlocked = 0,
-    AccessibleAfterFirstUnlock,
-    AccessibleAlways,
-    AccessibleWhenPasscodeSetThisDeviceOnly,
-    AccessibleWhenUnlockedThisDeviceOnly,
-    AccessibleAfterFirstUnlockThisDeviceOnly,
-    AccessibleAlwaysThisDeviceOnly
+  AccessibleWhenUnlocked = 0,
+  AccessibleAfterFirstUnlock,
+  AccessibleAlways,
+  AccessibleWhenPasscodeSetThisDeviceOnly,
+  AccessibleWhenUnlockedThisDeviceOnly,
+  AccessibleAfterFirstUnlockThisDeviceOnly,
+  AccessibleAlwaysThisDeviceOnly
 };
 
 CFStringRef _accessibleValue(const int accessible)
 {
   switch (accessible) {
-        case AccessibleWhenUnlocked:
-            return kSecAttrAccessibleWhenUnlocked;
-        case AccessibleAfterFirstUnlock:
-            return kSecAttrAccessibleAfterFirstUnlock;
-        case AccessibleAlways:
-            return kSecAttrAccessibleAlways;
-        case AccessibleWhenPasscodeSetThisDeviceOnly:
-            return kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly;
-        case AccessibleWhenUnlockedThisDeviceOnly:
-            return kSecAttrAccessibleWhenUnlockedThisDeviceOnly;
-        case AccessibleAfterFirstUnlockThisDeviceOnly:
-            return kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly;
-        case AccessibleAlwaysThisDeviceOnly:
-            return kSecAttrAccessibleAlwaysThisDeviceOnly;
-        default:
-            return kSecAttrAccessibleWhenUnlocked; // Default case
-    }
+    case AccessibleWhenUnlocked:
+      return kSecAttrAccessibleWhenUnlocked;
+    case AccessibleAfterFirstUnlock:
+      return kSecAttrAccessibleAfterFirstUnlock;
+    case AccessibleAlways:
+      return kSecAttrAccessibleAlways;
+    case AccessibleWhenPasscodeSetThisDeviceOnly:
+      return kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly;
+    case AccessibleWhenUnlockedThisDeviceOnly:
+      return kSecAttrAccessibleWhenUnlockedThisDeviceOnly;
+    case AccessibleAfterFirstUnlockThisDeviceOnly:
+      return kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly;
+    case AccessibleAlwaysThisDeviceOnly:
+      return kSecAttrAccessibleAlwaysThisDeviceOnly;
+    default:
+      return kSecAttrAccessibleWhenUnlocked; // Default case
+  }
 }
 
 NSString *serviceName = nil;
@@ -190,12 +190,12 @@ bool secureStorageHasItem(const std::string key)
   return status != errSecItemNotFound;
 }
 
-bool setSecureStorageItem(
-    const std::string key,
-    const std::string value,
-    const int accessible)
+bool setSecureStorageItem(const std::string key, const std::string value, const int accessible)
 {
   NSMutableDictionary *dictionary = generateBaseQueryDictionary(key);
+
+  SecItemDelete((CFDictionaryRef)dictionary);
+
   NSData *valueData = [NSData dataWithBytes:value.data() length:value.length()];
   CFStringRef accessibleValue = _accessibleValue(accessible);
   [dictionary setObject:valueData forKey:(id)kSecValueData];
@@ -203,20 +203,7 @@ bool setSecureStorageItem(
 
   OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, NULL);
 
-  if (status == errSecSuccess) {
-    return true;
-  } else {
-    NSMutableDictionary *updateDictionary = [[NSMutableDictionary alloc] init];
-    [updateDictionary setObject:valueData forKey:(id)kSecValueData];
-    updateDictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessibleValue;
-    NSMutableDictionary *searchDictionary = generateBaseQueryDictionary(key);
-    OSStatus status =
-        SecItemUpdate((CFDictionaryRef)searchDictionary, (CFDictionaryRef)updateDictionary);
-
-    return status == errSecSuccess;
-  }
-
-  return true;
+  return status == errSecSuccess;
 }
 
 bool deleteSecureStorageItem(const std::string key)
