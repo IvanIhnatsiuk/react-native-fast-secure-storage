@@ -7,28 +7,30 @@ import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 
 class FastSecureStoragePackage : TurboReactPackage() {
-  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    return if (name == FastSecureStorageModule.NAME) {
+  override fun getModule(
+    name: String,
+    reactContext: ReactApplicationContext,
+  ): NativeModule? =
+    if (name == FastSecureStorageModule.NAME) {
       FastSecureStorageModule(reactContext)
     } else {
       null
     }
-  }
 
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-    return ReactModuleInfoProvider {
+  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider =
+    ReactModuleInfoProvider {
       val moduleInfos: MutableMap<String, ReactModuleInfo> =
         HashMap()
-      moduleInfos[FastSecureStorageModule.NAME] = ReactModuleInfo(
-        FastSecureStorageModule.NAME,
-        FastSecureStorageModule.NAME,
-        false,  // canOverrideExistingModule
-        false,  // needsEagerInit
-        true,  // hasConstants
-        false,  // isCxxModule
-        true // isTurboModule
-      )
+      moduleInfos[FastSecureStorageModule.NAME] =
+        ReactModuleInfo(
+          FastSecureStorageModule.NAME,
+          FastSecureStorageModule.NAME,
+          false, // canOverrideExistingModule
+          false, // needsEagerInit
+          true, // hasConstants
+          false, // isCxxModule
+          true, // isTurboModule
+        )
       moduleInfos
     }
-  }
 }
