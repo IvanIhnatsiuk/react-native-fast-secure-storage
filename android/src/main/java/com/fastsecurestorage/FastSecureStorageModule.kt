@@ -7,9 +7,10 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.module.annotations.ReactModule
 
 @ReactModule(name = FastSecureStorageModule.NAME)
-class FastSecureStorageModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
+class FastSecureStorageModule(
+  private val reactContext: ReactApplicationContext,
+) : ReactContextBaseJavaModule(
+    reactContext,
   ) {
   private val bridge = FastSecureStorageBridge(reactContext)
 
@@ -25,9 +26,7 @@ class FastSecureStorageModule(private val reactContext: ReactApplicationContext)
     }
   }
 
-  override fun getName(): String {
-    return NAME
-  }
+  override fun getName(): String = NAME
 
   companion object {
     const val NAME: String = "FastSecureStorage"

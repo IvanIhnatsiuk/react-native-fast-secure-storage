@@ -14,12 +14,14 @@ import java.io.IOException
 import java.security.GeneralSecurityException
 
 @OptIn(FrameworkAPI::class)
-class FastSecureStorageBridge(private val context: ReactApplicationContext) {
+class FastSecureStorageBridge(
+  private val context: ReactApplicationContext,
+) {
   private var sharedPreferences: SharedPreferences? = null
 
   private external fun installNativeJsi(
     jsContextNativePointer: Long,
-    jsCallInvokerHolder: CallInvokerHolderImpl
+    jsCallInvokerHolder: CallInvokerHolderImpl,
   )
 
   init {
@@ -30,7 +32,10 @@ class FastSecureStorageBridge(private val context: ReactApplicationContext) {
     }
   }
 
-  fun setItem(alias: String, value: String): Boolean {
+  fun setItem(
+    alias: String,
+    value: String,
+  ): Boolean {
     try {
       sharedPreferences?.edit()?.putString(alias, value)?.apply()
       return true
@@ -48,32 +53,33 @@ class FastSecureStorageBridge(private val context: ReactApplicationContext) {
   fun getAllItems(): String {
     val entries = this.sharedPreferences?.all?.entries ?: return JSONArray().toString()
 
-    val keyValueList = entries.map { element ->
-      val jsonObject = JSONObject()
-      jsonObject.put("key", element.key)
-      jsonObject.put("value", element.value)
-    }
+    val keyValueList =
+      entries.map { element ->
+        val jsonObject = JSONObject()
+        jsonObject.put("key", element.key)
+        jsonObject.put("value", element.value)
+      }
 
     return JSONArray(keyValueList).toString()
   }
 
-  fun hasItem(key: String): Boolean {
-    return this.sharedPreferences?.contains(key) ?: false
-  }
+  fun hasItem(key: String): Boolean = this.sharedPreferences?.contains(key) ?: false
 
   @get:Throws(GeneralSecurityException::class, IOException::class)
   private val secureSharedPreferences: SharedPreferences
     get() {
-      val key = MasterKey.Builder(context)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
+      val key =
+        MasterKey
+          .Builder(context)
+          .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+          .build()
 
       return EncryptedSharedPreferences.create(
         context,
         "secret_shared_prefs",
         key,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
       )
     }
 
@@ -106,9 +112,18 @@ class FastSecureStorageBridge(private val context: ReactApplicationContext) {
 
   fun clearStorage() {
     try {
-      if (this.sharedPreferences?.all?.keys?.size == 0) return
+      if (this.sharedPreferences
+          ?.all
+          ?.keys
+          ?.size == 0
+      ) {
+        return
+      }
 
-      this.sharedPreferences?.edit()?.clear()?.apply()
+      this.sharedPreferences
+        ?.edit()
+        ?.clear()
+        ?.apply()
     } catch (e: Exception) {
       e.printStackTrace()
     }
