@@ -75,7 +75,7 @@
     "typescript": "^5.2.2"
   },
   "resolutions": {
-    "@types/react": "^18.2.44"
+    "serve-static": "1.15.0"
   },
   "peerDependencies": {
     "react": "*",
