@@ -13,6 +13,7 @@ const testItems = new Array(100).fill(0).map((_, index) => {
 
 export default function App() {
   const [result, setResult] = useState<string | undefined>();
+  const [hasItem, setHasItem] = useState(false);
   const [text, setText] = useState('');
 
   const getTestValue = async () => {
@@ -44,6 +45,7 @@ export default function App() {
     <ScrollView contentContainerStyle={styles.container}>
       <Rectangle />
       <Text>{result}</Text>
+      <Text>{hasItem ? 'Item exists' : 'Item does not exist'}</Text>
       <TextInput
         style={{ height: 50, width: '100%' }}
         defaultValue={text}
@@ -76,6 +78,12 @@ export default function App() {
         onPress={async () => {
           await SecureStorage.removeItem('test');
           getTestValue();
+        }}
+      />
+      <Button
+        title="has item"
+        onPress={async () => {
+          setHasItem(await SecureStorage.hasItem('test'));
         }}
       />
     </ScrollView>
