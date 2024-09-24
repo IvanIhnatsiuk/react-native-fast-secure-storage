@@ -117,7 +117,7 @@ bool hasItem(const std::string key) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID hasItemMethodID =
-      jniEnv->GetMethodID(java_class, "hasitem", "(Ljava/lang/String;)Z");
+      jniEnv->GetMethodID(java_class, "hasItem", "(Ljava/lang/String;)Z");
   jvalue params[1];
   params[0].l = string2jstring(jniEnv, key);
 
