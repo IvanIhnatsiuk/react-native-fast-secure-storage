@@ -58,8 +58,7 @@ void install(
 
     const std::string key = arguments[0].getString(runtime).utf8(runtime);
     const std::string value = arguments[1].getString(runtime).utf8(runtime);
-    const int accessible =
-        arguments[2].getNumber();
+    const int accessible = arguments[2].getNumber();
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
     return promise.callAsConstructor(
         runtime,
@@ -111,9 +110,9 @@ void install(
           item.getProperty(runtime, "key").asString(runtime).utf8(runtime);
       const auto value =
           item.getProperty(runtime, "value").asString(runtime).utf8(runtime);
-      const auto accessibleValue = item.getProperty(runtime, "accessibleValue")
-            .getNumber();
-        itemsArray.push_back({key, value, static_cast<int>(accessibleValue)});
+      const auto accessibleValue =
+          item.getProperty(runtime, "accessibleValue").getNumber();
+      itemsArray.push_back({key, value, static_cast<int>(accessibleValue)});
     }
 
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
