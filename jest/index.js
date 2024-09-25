@@ -15,6 +15,7 @@ const SecureStorage = {
   getAllItems: jest.fn().mockResolvedValue([{ key: 'key', value: 'value' }]),
   removeItem: jest.fn().mockResolvedValue(true),
   getAllKeys: jest.fn().mockResolvedValue(['key']),
+  hasItem: jest.fn().mockResolvedValue(true),
 };
 
 const mock = {
