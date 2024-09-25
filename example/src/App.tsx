@@ -17,7 +17,7 @@ export default function App() {
   const [text, setText] = useState('');
 
   const getTestValue = async () => {
-    const startTime = new Date().getTime();
+    const startTime = performance.now();
     try {
       const value = await SecureStorage.getItem('test');
       setResult(value);
@@ -26,13 +26,13 @@ export default function App() {
         setResult(error.message);
       }
     }
-    console.log('Time taken:', new Date().getTime() - startTime);
+    console.log('Time taken:', performance.now() - startTime);
   };
 
   const setTestValue = async () => {
-    const startTime = new Date().getTime();
+    const startTime = performance.now();
     await SecureStorage.setItem('test', 'test value');
-    console.log('Time taken:', new Date().getTime() - startTime);
+    console.log('Time taken:', performance.now() - startTime);
     const value = await SecureStorage.getItem('test');
     setResult(value);
   };
@@ -55,9 +55,9 @@ export default function App() {
       <Button
         title="set multiple items"
         onPress={async () => {
-          const startTime = new Date().getTime();
+          const startTime = performance.now();
           await SecureStorage.setItems(testItems);
-          console.log('Time taken:', new Date().getTime() - startTime);
+          console.log('Time taken:', performance.now() - startTime);
         }}
       />
       <Button title="get value" onPress={getTestValue} />

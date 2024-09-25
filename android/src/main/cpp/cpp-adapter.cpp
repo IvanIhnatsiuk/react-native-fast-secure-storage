@@ -86,7 +86,7 @@ jstring string2jstring(JNIEnv *env, const std::string str) {
 bool setItem(
     const std::string key,
     const std::string value,
-    const int accessibleValue) {
+    const uint8_t accessibleValue) {
   JNIEnv *jniEnv = GetJniEnv();
   java_class = jniEnv->GetObjectClass(java_object);
   jmethodID setMethodID = jniEnv->GetMethodID(

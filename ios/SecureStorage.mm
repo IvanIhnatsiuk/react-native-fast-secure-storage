@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, AccessibilityLevel) {
   AccessibleAlwaysThisDeviceOnly
 };
 
-CFStringRef _accessibleValue(const int accessible)
+CFStringRef _accessibleValue(const uint8_t accessible)
 {
   switch (accessible) {
     case AccessibleWhenUnlocked:
@@ -190,7 +190,7 @@ bool secureStorageHasItem(const std::string key)
   return status != errSecItemNotFound;
 }
 
-bool setSecureStorageItem(const std::string key, const std::string value, const int accessible)
+bool setSecureStorageItem(const std::string key, const std::string value, const uint8_t accessible)
 {
   NSMutableDictionary *dictionary = generateBaseQueryDictionary(key);
 

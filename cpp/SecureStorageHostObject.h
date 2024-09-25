@@ -9,7 +9,7 @@ using namespace std;
 void install(
     jsi::Runtime &rt,
     shared_ptr<react::CallInvoker> jsCallInvoker,
-    function<bool(const string, const string, const int)> setItemFn,
+    function<bool(const string, const string, const uint8_t)> setItemFn,
     function<string(const string)> getItemFn,
     function<bool(const string)> deleteItemFn,
     function<void()> clearStorageFn,

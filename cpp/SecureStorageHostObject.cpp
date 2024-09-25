@@ -8,7 +8,7 @@ using namespace facebook;
 using namespace jsi;
 using namespace std;
 
-function<bool(const string, const string, const int)> _set;
+function<bool(const string, const string, const uint8_t)> _set;
 function<const string(const string)> _get;
 function<bool(const string)> _del;
 function<void()> _clearStorage;
@@ -25,13 +25,13 @@ jsi::Value generateJSError(jsi::Runtime &runtime, string errorMessage) {
 struct KeyValue {
   string key;
   string value;
-  int accessibleValue;
+  uint8_t accessibleValue;
 };
 
 void install(
     jsi::Runtime &runtime,
     shared_ptr<react::CallInvoker> jsCallInvoker,
-    function<bool(const string, const string, const int)> setItemFn,
+    function<bool(const string, const string, const uint8_t)> setItemFn,
     function<string(const string)> getItemFn,
     function<bool(const string)> delItemFn,
     function<void()> clearStorageFn,
@@ -58,7 +58,7 @@ void install(
 
     const std::string key = arguments[0].getString(runtime).utf8(runtime);
     const std::string value = arguments[1].getString(runtime).utf8(runtime);
-    const int accessible = arguments[2].getNumber();
+    const auto accessible = static_cast<uint8_t>(arguments[2].getNumber());
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
     return promise.callAsConstructor(
         runtime,
@@ -66,19 +66,19 @@ void install(
             runtime,
             PropNameID::forAscii(runtime, "executor"),
             2,
-            [key, value, accessible, jsCallInvoker = jsCallInvoker](
+            [&key, &value, &accessible, &jsCallInvoker](
                 Runtime &runtime,
                 const Value &thisValue,
                 const Value *args,
                 size_t) -> Value {
               auto resolve = make_shared<Value>(runtime, args[0]);
               auto reject = make_shared<Value>(runtime, args[1]);
-              std::thread([key,
-                           value,
-                           accessible,
+              std::thread([&key,
+                           &value,
+                           &accessible,
                            resolve = std::move(resolve),
                            reject = std::move(reject),
-                           jsCallInvoker = jsCallInvoker,
+                           &jsCallInvoker,
                            &runtime]() {
                 bool result = _set(key, value, accessible);
                 jsCallInvoker->invokeAsync(
@@ -112,7 +112,7 @@ void install(
           item.getProperty(runtime, "value").asString(runtime).utf8(runtime);
       const auto accessibleValue =
           item.getProperty(runtime, "accessibleValue").getNumber();
-      itemsArray.push_back({key, value, static_cast<int>(accessibleValue)});
+      itemsArray.push_back({key, value, static_cast<uint8_t>(accessibleValue)});
     }
 
     auto promise = runtime.global().getPropertyAsFunction(runtime, "Promise");
@@ -122,17 +122,17 @@ void install(
             runtime,
             PropNameID::forAscii(runtime, "executor"),
             2,
-            [itemsArray, jsCallInvoker = jsCallInvoker](
+            [itemsArray, &jsCallInvoker](
                 Runtime &runtime,
                 const Value &thisValue,
                 const Value *args,
                 size_t) -> Value {
               auto resolve = make_shared<Value>(runtime, args[0]);
               auto reject = make_shared<Value>(runtime, args[1]);
-              std::thread([itemsArray,
+              std::thread([&itemsArray,
                            resolve = std::move(resolve),
                            reject = std::move(reject),
-                           jsCallInvoker = jsCallInvoker,
+                           &jsCallInvoker,
                            &runtime]() {
                 try {
                   for (const auto &item : itemsArray) {

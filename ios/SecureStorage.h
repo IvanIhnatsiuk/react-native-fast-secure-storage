@@ -21,5 +21,5 @@ bool secureStorageHasItem(const std::string key);
 bool setSecureStorageItem(
     const std::string key,
     const std::string value,
-    const int accessibleValue);
+    const uint8_t accessibleValue);
 bool deleteSecureStorageItem(const std::string key);

@@ -1237,7 +1237,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-fast-secure-storage (1.1.1):
+  - react-native-fast-secure-storage (1.1.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1759,7 +1759,7 @@ SPEC CHECKSUMS:
   React-logger: 4072f39df335ca443932e0ccece41fbeb5ca8404
   React-Mapbuffer: 714f2fae68edcabfc332b754e9fbaa8cfc68fdd4
   React-microtasksnativemodule: 4943ad8f99be8ccf5a63329fa7d269816609df9e
-  react-native-fast-secure-storage: b7c5601cab320f0de24f0f2d0becfe84df0ef81e
+  react-native-fast-secure-storage: 7a769283d4461fe0f5f213308cb317510622aa20
   React-nativeconfig: 4a9543185905fe41014c06776bf126083795aed9
   React-NativeModulesApple: 0506da59fc40d2e1e6e12a233db5e81c46face27
   React-perflogger: 3bbb82f18e9ac29a1a6931568e99d6305ef4403b
