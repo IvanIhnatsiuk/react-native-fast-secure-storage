@@ -1,6 +1,7 @@
-import type { ACCESSIBLE } from './enums';
+import type { ACCESSIBLE } from "./enums";
 
 declare global {
+  // eslint-disable-next-line no-var
   var __SecureStorage: ISecureStorageNativeInstance | undefined;
 }
 
@@ -17,7 +18,7 @@ export interface ISecureStorage {
   setItem(
     key: string,
     value: string,
-    accessible?: ACCESSIBLE
+    accessible?: ACCESSIBLE,
   ): Promise<boolean>;
   getItem(key: string): Promise<string>;
   clearStorage(): Promise<void>;
@@ -29,7 +30,7 @@ export interface ISecureStorage {
 }
 
 export interface ISecureStorageNativeInstance
-  extends Omit<ISecureStorage, 'getAllItems' | 'getAllKeys'> {
+  extends Omit<ISecureStorage, "getAllItems" | "getAllKeys"> {
   getAllKeys(): Promise<string>;
   getAllItems(): Promise<string>;
 }

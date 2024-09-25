@@ -10,11 +10,11 @@ const ACCESSIBLE = {
 
 const SecureStorage = {
   setItem: jest.fn().mockResolvedValue(true),
-  getItem: jest.fn().mockResolvedValue('value'),
+  getItem: jest.fn().mockResolvedValue("value"),
   setItems: jest.fn().mockResolvedValue(null),
-  getAllItems: jest.fn().mockResolvedValue([{ key: 'key', value: 'value' }]),
+  getAllItems: jest.fn().mockResolvedValue([{ key: "key", value: "value" }]),
   removeItem: jest.fn().mockResolvedValue(true),
-  getAllKeys: jest.fn().mockResolvedValue(['key']),
+  getAllKeys: jest.fn().mockResolvedValue(["key"]),
   hasItem: jest.fn().mockResolvedValue(true),
 };
 

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, Text, Button, ScrollView, TextInput } from 'react-native';
-import SecureStorage, { ACCESSIBLE } from 'react-native-fast-secure-storage';
-import { Rectangle } from './Reactangle';
+import { useEffect, useState } from "react";
+import { Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import SecureStorage, { ACCESSIBLE } from "react-native-fast-secure-storage";
+
+import { Rectangle } from "./Reactangle";
 
 const testItems = new Array(100).fill(0).map((_, index) => {
   return {
@@ -14,26 +15,30 @@ const testItems = new Array(100).fill(0).map((_, index) => {
 export default function App() {
   const [result, setResult] = useState<string | undefined>();
   const [hasItem, setHasItem] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   const getTestValue = async () => {
     const startTime = new Date().getTime();
+
     try {
-      const value = await SecureStorage.getItem('test');
+      const value = await SecureStorage.getItem("test");
+
       setResult(value);
     } catch (error) {
       if (error instanceof Error) {
         setResult(error.message);
       }
     }
-    console.log('Time taken:', new Date().getTime() - startTime);
+    console.log("Time taken:", new Date().getTime() - startTime);
   };
 
   const setTestValue = async () => {
     const startTime = new Date().getTime();
-    await SecureStorage.setItem('test', 'test value');
-    console.log('Time taken:', new Date().getTime() - startTime);
-    const value = await SecureStorage.getItem('test');
+
+    await SecureStorage.setItem("test", "test value");
+    console.log("Time taken:", new Date().getTime() - startTime);
+    const value = await SecureStorage.getItem("test");
+
     setResult(value);
   };
 
@@ -45,10 +50,10 @@ export default function App() {
     <ScrollView contentContainerStyle={styles.container}>
       <Rectangle />
       <Text>{result}</Text>
-      <Text>{hasItem ? 'Item exists' : 'Item does not exist'}</Text>
+      <Text>{hasItem ? "Item exists" : "Item does not exist"}</Text>
       <TextInput
-        style={{ height: 50, width: '100%' }}
         defaultValue={text}
+        style={{ height: 50, width: "100%" }}
         onChangeText={setText}
       />
       <Button title="set value" onPress={setTestValue} />
@@ -56,8 +61,9 @@ export default function App() {
         title="set multiple items"
         onPress={async () => {
           const startTime = new Date().getTime();
+
           await SecureStorage.setItems(testItems);
-          console.log('Time taken:', new Date().getTime() - startTime);
+          console.log("Time taken:", new Date().getTime() - startTime);
         }}
       />
       <Button title="get value" onPress={getTestValue} />
@@ -76,14 +82,14 @@ export default function App() {
       <Button
         title="delete value"
         onPress={async () => {
-          await SecureStorage.removeItem('test');
+          await SecureStorage.removeItem("test");
           getTestValue();
         }}
       />
       <Button
         title="has item"
         onPress={async () => {
-          setHasItem(await SecureStorage.hasItem('test'));
+          setHasItem(await SecureStorage.hasItem("test"));
         }}
       />
     </ScrollView>
@@ -93,8 +99,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   box: {
     width: 60,
