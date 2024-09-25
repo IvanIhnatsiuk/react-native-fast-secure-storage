@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import {
   Animated,
   Dimensions,
@@ -6,14 +6,14 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
+} from "react-native";
 
 export const Rectangle = () => {
   const animationValue = useRef(new Animated.Value(0)).current;
   const colorAnimation = useRef(new Animated.Value(0)).current;
 
   // Get the full width of the screen
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
 
   useEffect(() => {
     const animate = () => {
@@ -47,7 +47,7 @@ export const Rectangle = () => {
               useNativeDriver: false,
             }),
           ]),
-        ])
+        ]),
       ).start();
     };
 
@@ -56,7 +56,7 @@ export const Rectangle = () => {
 
   const backgroundColor = colorAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['blue', 'green'],
+    outputRange: ["blue", "green"],
   });
 
   return (
@@ -75,24 +75,24 @@ export const Rectangle = () => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 20,
-    width: '100%',
+    width: "100%",
   },
   rectangle: {
     width: 150,
     height: 150,
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     borderRadius: 10,
     marginLeft: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
