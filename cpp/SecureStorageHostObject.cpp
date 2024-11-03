@@ -406,6 +406,61 @@ void install(
     return Value();
   });
 
+  auto hasItemSync = CREATE_HOST_FN("hasItemSync", 1) {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "hasItemSync: key must be a string value!");
+    }
+
+    const std::string key = arguments[0].getString(runtime).utf8(runtime);
+
+    auto result = _hasItem(key);
+
+    return Value(result);
+  });
+
+  auto setItemSync = CREATE_HOST_FN("setItemSync", 3) {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "setItemSync: key must be a string value!");
+    }
+
+    if (!arguments[1].isString()) {
+      throw jsi::JSError(runtime, "setItemSync: value must be a string value!");
+    }
+
+    const std::string key = arguments[0].getString(runtime).utf8(runtime);
+    const std::string value = arguments[1].getString(runtime).utf8(runtime);
+    const int accessible = arguments[2].getNumber();
+
+    auto result = _set(key, value, accessible);
+
+    return Value(result);
+  });
+
+  auto removeItemSync = CREATE_HOST_FN("removeItemSync", 1) {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(
+          runtime, "removeItemSync: key must be a string value!");
+    }
+
+    const std::string key = arguments[0].getString(runtime).utf8(runtime);
+
+    auto result = _del(key);
+
+    return Value(result);
+  });
+
+  auto getItemSync = CREATE_HOST_FN("getItemSync", 1) {
+    if (!arguments[0].isString()) {
+      throw jsi::JSError(runtime, "getItemSync: key must be a string value!");
+    }
+
+    const std::string key = arguments[0].getString(runtime).utf8(runtime);
+
+    auto value = _get(key);
+
+    return Value(runtime, jsi::String::createFromUtf8(runtime, value));
+  });
+
   jsi::Object module = jsi::Object(runtime);
 
   module.setProperty(runtime, "setItem", setItem);
@@ -416,6 +471,10 @@ void install(
   module.setProperty(runtime, "setItems", setItems);
   module.setProperty(runtime, "getAllKeys", getAllKeys);
   module.setProperty(runtime, "getAllItems", getAllItems);
+  module.setProperty(runtime, "hasItemSync", hasItemSync);
+  module.setProperty(runtime, "setItemSync", setItemSync);
+  module.setProperty(runtime, "removeItemSync", removeItemSync);
+  module.setProperty(runtime, "getItemSync", getItemSync);
 
   runtime.global().setProperty(runtime, "__SecureStorage", std::move(module));
 }

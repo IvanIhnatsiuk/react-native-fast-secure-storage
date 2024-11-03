@@ -119,6 +119,34 @@ class SecureStorage implements ISecureStorage {
 
     return result;
   };
+
+  public setItemSync = (
+    key: string,
+    value: string,
+    accessible = ACCESSIBLE.WHEN_UNLOCKED,
+  ): boolean => {
+    const func = this.getFunctionFromCache("setItemSync");
+
+    return func(key, value, accessible);
+  };
+
+  public getItemSync = (key: string): string | null => {
+    const func = this.getFunctionFromCache("getItemSync");
+
+    return func(key);
+  };
+
+  public removeItemSync = (key: string): boolean => {
+    const func = this.getFunctionFromCache("removeItemSync");
+
+    return func(key);
+  };
+
+  public hasItemSync = (key: string): boolean => {
+    const func = this.getFunctionFromCache("hasItemSync");
+
+    return func(key);
+  };
 }
 
 export default SecureStorage;

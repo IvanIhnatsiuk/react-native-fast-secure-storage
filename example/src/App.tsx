@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import SecureStorage, { ACCESSIBLE } from "react-native-fast-secure-storage";
 
@@ -17,11 +17,13 @@ export default function App() {
   const [hasItem, setHasItem] = useState(false);
   const [text, setText] = useState("");
 
-  const getTestValue = async () => {
+  const getTestValue = useCallback(async () => {
     const startTime = new Date().getTime();
 
     try {
       const value = await SecureStorage.getItem("test");
+
+      console.log(value);
 
       setResult(value);
     } catch (error) {
@@ -30,9 +32,9 @@ export default function App() {
       }
     }
     console.log("Time taken:", new Date().getTime() - startTime);
-  };
+  }, []);
 
-  const setTestValue = async () => {
+  const setTestValue = useCallback(async () => {
     const startTime = new Date().getTime();
 
     await SecureStorage.setItem("test", "test value");
@@ -40,11 +42,51 @@ export default function App() {
     const value = await SecureStorage.getItem("test");
 
     setResult(value);
-  };
+  }, []);
+
+  const setMultipleItems = useCallback(async () => {
+    const startTime = new Date().getTime();
+
+    await SecureStorage.setItems(testItems);
+    console.log("Time taken:", new Date().getTime() - startTime);
+  }, []);
+
+  const getAllKeys = useCallback(async () => {
+    console.log(await SecureStorage.getAllKeys());
+  }, []);
+
+  const getAllItems = useCallback(async () => {
+    console.log(await SecureStorage.getAllItems());
+  }, []);
+
+  const deleteValue = useCallback(async () => {
+    await SecureStorage.removeItem("test");
+    getTestValue();
+  }, [getTestValue]);
+
+  const checkHasItem = useCallback(async () => {
+    setHasItem(await SecureStorage.hasItem("test"));
+  }, []);
+
+  const setItemSync = useCallback(() => {
+    SecureStorage.setItemSync("test", "test value");
+    getTestValue();
+  }, [getTestValue]);
+
+  const removeItemSync = useCallback(() => {
+    SecureStorage.removeItemSync("test");
+    getTestValue();
+  }, [getTestValue]);
+
+  const getItemSync = useCallback(() => {
+    const value = SecureStorage.getItemSync("test");
+
+    setResult(value as string);
+  }, []);
 
   useEffect(() => {
     getTestValue();
-  }, []);
+  }, [getTestValue]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -57,41 +99,16 @@ export default function App() {
         onChangeText={setText}
       />
       <Button title="set value" onPress={setTestValue} />
-      <Button
-        title="set multiple items"
-        onPress={async () => {
-          const startTime = new Date().getTime();
-
-          await SecureStorage.setItems(testItems);
-          console.log("Time taken:", new Date().getTime() - startTime);
-        }}
-      />
+      <Button title="set multiple items" onPress={setMultipleItems} />
       <Button title="get value" onPress={getTestValue} />
-      <Button
-        title="get all keys"
-        onPress={async () => console.log(await SecureStorage.getAllKeys())}
-      />
-      <Button
-        title="get all items"
-        onPress={async () => console.log(await SecureStorage.getAllItems())}
-      />
-      <Button
-        title="clear storage"
-        onPress={() => SecureStorage.clearStorage()}
-      />
-      <Button
-        title="delete value"
-        onPress={async () => {
-          await SecureStorage.removeItem("test");
-          getTestValue();
-        }}
-      />
-      <Button
-        title="has item"
-        onPress={async () => {
-          setHasItem(await SecureStorage.hasItem("test"));
-        }}
-      />
+      <Button title="get all keys" onPress={getAllKeys} />
+      <Button title="get all items" onPress={getAllItems} />
+      <Button title="clear storage" onPress={SecureStorage.clearStorage} />
+      <Button title="delete value" onPress={deleteValue} />
+      <Button title="has item" onPress={checkHasItem} />
+      <Button title="set item sync" onPress={setItemSync} />
+      <Button title="remove item sync" onPress={removeItemSync} />
+      <Button title="get item sync" onPress={getItemSync} />
     </ScrollView>
   );
 }
