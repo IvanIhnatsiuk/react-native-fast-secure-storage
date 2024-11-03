@@ -32,10 +32,10 @@ yarn add react-native-fast-secure-storage
 - [removeItem](#removeitem)
 - [clearStorage](#clearStorage)
 - [hasItem](#hasitem)
-- [getItemSync] (#hasItemSync)
-- [setItemSync] (#setItemSync)
-- [hasItemSync] (#hasItemSync)
-- [removeItemSync] (#removeItemSync)
+- [getItemSync](#getitemsync)
+- [setItemSync](#setitemsync)
+- [hasItemSync](#hasitemsync)
+- [removeItemSync](#removeitemsync)
 
 ## Methods
 
