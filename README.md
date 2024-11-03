@@ -32,6 +32,10 @@ yarn add react-native-fast-secure-storage
 - [removeItem](#removeitem)
 - [clearStorage](#clearStorage)
 - [hasItem](#hasitem)
+- [getItemSync] (#hasItemSync)
+- [setItemSync] (#setItemSync)
+- [hasItemSync] (#hasItemSync)
+- [removeItemSync] (#removeItemSync)
 
 ## Methods
 
@@ -184,6 +188,64 @@ await SecureStorage.setItem("key1", "value1");
 const result = await SecureStorage.hasItem("key1");
 
 console.log(result) // output: true
+
+```
+
+## Synchronous Methods
+
+### getItemSync
+
+Synchronously retrieves an item from the secure storage.
+
+- key: The key of the item to retrieve.
+
+```ts
+import SecureStorage from 'react-native-fast-secure-storage';
+
+const value = secureStorage.getItemSync('key1');
+console.log(value); // Output: 'value1'
+```
+
+### setItemSync
+
+Stores an item in the secure storage synchronously.
+
+- key: The key of the item.
+- value: The value of the item.
+- accessible: (Optional) The accessibility level of the item. Default is ACCESSIBLE.WHEN_UNLOCKED.
+
+```ts
+
+const setResult = secureStorage.setItemSync('key1', 'value1');
+console.log(setResult); // Output: true
+
+```
+
+### hasItemSync
+
+Checks if an item exists in the secure storage synchronously.
+
+- key: The key of the item to check.
+
+```ts
+
+const setResult = secureStorage.setItemSync('key1', 'value1');
+const exists = secureStorage.hasItemSync('key1');
+console.log(exists); // Output: true
+
+```
+
+### removeItemSync
+
+Removes an item from the secure storage synchronously.
+
+- key: The key of the item to remove.
+
+```ts
+
+const setResult = secureStorage.setItemSync('key1', 'value1');
+
+const removeResult = secureStorage.removeItemSync('key1');
 
 ```
 

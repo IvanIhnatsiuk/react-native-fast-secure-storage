@@ -27,6 +27,10 @@ export interface ISecureStorage {
   getAllItems(): Promise<StoredSecureStorageItem>;
   removeItem(key: string): Promise<boolean>;
   hasItem(key: string): Promise<boolean>;
+  setItemSync(key: string, value: string, accessible?: ACCESSIBLE): boolean;
+  getItemSync(key: string): string | null;
+  removeItemSync(key: string): boolean;
+  hasItemSync(key: string): boolean;
 }
 
 export interface ISecureStorageNativeInstance
