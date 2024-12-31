@@ -3,12 +3,12 @@ package com.fastsecurestorage
 import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 
-class FastSecureStorageModule(reactContext: ReactApplicationContext) : NativeFastSecureStorageSpec(reactContext) {
+class FastSecureStorageModule(
+  reactContext: ReactApplicationContext,
+) : NativeFastSecureStorageSpec(reactContext) {
   private val fastSecureStorage = FastSecureStorageImpl(reactContext)
 
-  override fun getName(): String {
-    return FastSecureStorageImpl.NAME
-  }
+  override fun getName(): String = FastSecureStorageImpl.NAME
 
   override fun install(): Boolean {
     try {
