@@ -5,7 +5,6 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
-import com.fastsecurestorage.FastSecureStorageModule
 
 class FastSecureStoragePackage : TurboReactPackage() {
   override fun getModule(
