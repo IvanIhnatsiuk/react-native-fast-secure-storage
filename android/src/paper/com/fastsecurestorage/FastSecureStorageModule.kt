@@ -1,34 +1,31 @@
-package com.fastsecurestorage
+package com.fastsecurestorage.paper
 
 import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.module.annotations.ReactModule
+import com.fastsecurestorage.FastSecureStorageImpl
 
-@ReactModule(name = FastSecureStorageModule.NAME)
+@ReactModule(name = FastSecureStorageImpl.NAME)
 class FastSecureStorageModule(
-  private val reactContext: ReactApplicationContext,
+  reactContext: ReactApplicationContext,
 ) : ReactContextBaseJavaModule(
     reactContext,
   ) {
-  private val bridge = FastSecureStorageBridge(reactContext)
+  private val fastSecureStorage = FastSecureStorageImpl(reactContext)
 
   @ReactMethod(isBlockingSynchronousMethod = true)
   fun install(): Boolean {
     try {
       System.loadLibrary("react-native-fast-secure-storage")
-      bridge.install(reactApplicationContext)
+      fastSecureStorage.install(reactApplicationContext)
       return true
     } catch (exception: Exception) {
-      Log.e(NAME, "Failed to install JSI Bindings!", exception)
+      Log.e(FastSecureStorageImpl.NAME, "Failed to install JSI Bindings!", exception)
       return false
     }
   }
 
-  override fun getName(): String = NAME
-
-  companion object {
-    const val NAME: String = "FastSecureStorage"
-  }
+  override fun getName(): String = FastSecureStorageImpl.NAME
 }

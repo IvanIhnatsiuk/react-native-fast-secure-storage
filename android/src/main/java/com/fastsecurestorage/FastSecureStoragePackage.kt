@@ -5,13 +5,14 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
+import com.fastsecurestorage.FastSecureStorageModule
 
 class FastSecureStoragePackage : TurboReactPackage() {
   override fun getModule(
     name: String,
     reactContext: ReactApplicationContext,
   ): NativeModule? =
-    if (name == FastSecureStorageModule.NAME) {
+    if (name == FastSecureStorageImpl.NAME) {
       FastSecureStorageModule(reactContext)
     } else {
       null
@@ -21,10 +22,10 @@ class FastSecureStoragePackage : TurboReactPackage() {
     ReactModuleInfoProvider {
       val moduleInfos: MutableMap<String, ReactModuleInfo> =
         HashMap()
-      moduleInfos[FastSecureStorageModule.NAME] =
+      moduleInfos[FastSecureStorageImpl.NAME] =
         ReactModuleInfo(
-          FastSecureStorageModule.NAME,
-          FastSecureStorageModule.NAME,
+          FastSecureStorageImpl.NAME,
+          FastSecureStorageImpl.NAME,
           false, // canOverrideExistingModule
           false, // needsEagerInit
           true, // hasConstants
