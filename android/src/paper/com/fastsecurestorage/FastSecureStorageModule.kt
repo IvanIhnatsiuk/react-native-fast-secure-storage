@@ -1,4 +1,4 @@
-package com.fastsecurestorage.paper
+package com.fastsecurestorage
 
 import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
