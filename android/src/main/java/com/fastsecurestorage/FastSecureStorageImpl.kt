@@ -14,7 +14,7 @@ import java.io.IOException
 import java.security.GeneralSecurityException
 
 @OptIn(FrameworkAPI::class)
-class FastSecureStorageBridge(
+class FastSecureStorageImpl(
   private val context: ReactApplicationContext,
 ) {
   private var sharedPreferences: SharedPreferences? = null
@@ -134,5 +134,9 @@ class FastSecureStorageBridge(
     val jsCallInvokerHolder =
       context.catalystInstance.jsCallInvokerHolder
     installNativeJsi(jsContextPointer, jsCallInvokerHolder as CallInvokerHolderImpl)
+  }
+
+  companion object {
+    const val NAME: String = "FastSecureStorage"
   }
 }

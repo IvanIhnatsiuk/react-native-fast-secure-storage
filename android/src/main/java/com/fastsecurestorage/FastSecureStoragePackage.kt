@@ -11,7 +11,7 @@ class FastSecureStoragePackage : TurboReactPackage() {
     name: String,
     reactContext: ReactApplicationContext,
   ): NativeModule? =
-    if (name == FastSecureStorageModule.NAME) {
+    if (name == FastSecureStorageImpl.NAME) {
       FastSecureStorageModule(reactContext)
     } else {
       null
@@ -21,10 +21,10 @@ class FastSecureStoragePackage : TurboReactPackage() {
     ReactModuleInfoProvider {
       val moduleInfos: MutableMap<String, ReactModuleInfo> =
         HashMap()
-      moduleInfos[FastSecureStorageModule.NAME] =
+      moduleInfos[FastSecureStorageImpl.NAME] =
         ReactModuleInfo(
-          FastSecureStorageModule.NAME,
-          FastSecureStorageModule.NAME,
+          FastSecureStorageImpl.NAME,
+          FastSecureStorageImpl.NAME,
           false, // canOverrideExistingModule
           false, // needsEagerInit
           true, // hasConstants

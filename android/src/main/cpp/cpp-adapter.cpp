@@ -276,14 +276,14 @@ std::string getAllItems() {
   return str;
 }
 
-struct FastSecureStorageBridge : jni::JavaClass<FastSecureStorageBridge> {
+struct FastSecureStorageImpl : jni::JavaClass<FastSecureStorageImpl> {
   static constexpr auto kJavaDescriptor =
-      "Lcom/fastsecurestorage/FastSecureStorageBridge;";
+      "Lcom/fastsecurestorage/FastSecureStorageImpl;";
 
   static void registerNatives() {
     javaClassStatic()->registerNatives({
         makeNativeMethod(
-            "installNativeJsi", FastSecureStorageBridge::installNativeJsi),
+            "installNativeJsi", FastSecureStorageImpl::installNativeJsi),
     });
   }
 
@@ -315,5 +315,5 @@ struct FastSecureStorageBridge : jni::JavaClass<FastSecureStorageBridge> {
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
   java_vm = vm;
   return facebook::jni::initialize(
-      vm, [] { FastSecureStorageBridge::registerNatives(); });
+      vm, [] { FastSecureStorageImpl::registerNatives(); });
 }

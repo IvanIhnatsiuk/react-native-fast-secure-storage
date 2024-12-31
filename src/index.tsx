@@ -14,7 +14,7 @@ const isTurboModuleEnabled = global.__turboModuleProxy !== null;
 
 const FastSecureStorageModule = isTurboModuleEnabled
   ? // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-    require("./NativeFastSecureStorage").default
+    require("./spec/NativeFastSecureStorage").default
   : NativeModules.FastSecureStorage;
 
 const FastSecureStorage = FastSecureStorageModule
