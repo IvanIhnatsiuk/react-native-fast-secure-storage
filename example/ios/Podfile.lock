@@ -1242,7 +1242,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-fast-secure-storage (1.2.1):
+  - react-native-fast-secure-storage (1.2.2):
     - DoubleConversion
     - glog
     - hermes-engine
