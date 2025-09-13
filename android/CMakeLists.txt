@@ -30,6 +30,7 @@ set_target_properties(
 find_package(ReactAndroid REQUIRED CONFIG)
 find_package(fbjni REQUIRED CONFIG)
 find_library(log-lib log)
+target_link_options(${PACKAGE_NAME} PRIVATE "-Wl,-z,max-page-size=16384")
 
 if(ReactAndroid_VERSION_MINOR GREATER_EQUAL 76)
   target_link_libraries(
