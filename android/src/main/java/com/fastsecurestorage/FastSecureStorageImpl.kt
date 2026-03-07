@@ -131,8 +131,9 @@ class FastSecureStorageImpl(
 
   fun install(context: ReactContext) {
     val jsContextPointer = context.javaScriptContextHolder!!.get()
-    val jsCallInvokerHolder =
-      context.catalystInstance.jsCallInvokerHolder
+    // context.getJSCallInvokerHolder() works in both bridge and bridgeless mode.
+    // context.catalystInstance is null in bridgeless; getJSCallInvokerHolder() is not.
+    val jsCallInvokerHolder = context.getJSCallInvokerHolder()
     installNativeJsi(jsContextPointer, jsCallInvokerHolder as CallInvokerHolderImpl)
   }
 

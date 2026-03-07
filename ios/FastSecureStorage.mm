@@ -12,6 +12,26 @@ using namespace facebook;
 
 RCT_EXPORT_MODULE()
 
+// New Architecture / bridgeless path: RCTTurboModuleManager calls this automatically after
+// getTurboModule:, passing the live jsi::Runtime and CallInvoker — no RCTBridge needed.
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)installJSIBindingsWithRuntime:(facebook::jsi::Runtime &)runtime
+                           callInvoker:(const std::shared_ptr<facebook::react::CallInvoker> &)callInvoker
+{
+  handleAppUninstall();
+  securestorageHostObject::install(
+      runtime,
+      callInvoker,
+      &setSecureStorageItem,
+      &getSecureStorageItem,
+      &deleteSecureStorageItem,
+      &clearSecureStorage,
+      &getAllKeys,
+      &getAllItems,
+      &secureStorageHasItem);
+}
+#endif
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
 {
   RCTBridge *bridge = [RCTBridge currentBridge];
