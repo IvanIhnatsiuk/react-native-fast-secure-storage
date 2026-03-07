@@ -28,9 +28,7 @@ const FastSecureStorage = FastSecureStorageModule
       },
     );
 
-if (!isTurboModuleEnabled) {
-  FastSecureStorage.install();
-}
+FastSecureStorage.install();
 
 export { ACCESSIBLE };
 
