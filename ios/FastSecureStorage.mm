@@ -12,8 +12,6 @@ using namespace facebook;
 
 RCT_EXPORT_MODULE()
 
-// New Architecture / bridgeless path: RCTTurboModuleManager calls this automatically after
-// getTurboModule:, passing the live jsi::Runtime and CallInvoker — no RCTBridge needed.
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)installJSIBindingsWithRuntime:(facebook::jsi::Runtime &)runtime
                            callInvoker:(const std::shared_ptr<facebook::react::CallInvoker> &)callInvoker
@@ -34,6 +32,9 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
 {
+#ifdef RCT_NEW_ARCH_ENABLED
+  return @true;
+#else
   RCTBridge *bridge = [RCTBridge currentBridge];
   RCTCxxBridge *cxxBridge = (RCTCxxBridge *)bridge;
   if (cxxBridge == nil) {
@@ -59,6 +60,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
       &secureStorageHasItem);
 
   return @true;
+#endif
 }
 
 // Don't compile this code when we build for the old architecture.
