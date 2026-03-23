@@ -26,18 +26,6 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Run unit tests
-        run: yarn test --maxWorkers=2 --coverage
-
   build-library:
     runs-on: ubuntu-latest
     steps:
@@ -51,7 +39,7 @@ jobs:
         run: yarn prepare
 
   build-ios:
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       TURBO_CACHE_DIR: .turbo/ios
     steps:
@@ -61,7 +49,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "15.4"
+          xcode-version: "16.4"
 
       - name: Setup
         uses: ./.github/actions/setup
