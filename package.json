@@ -3,6 +3,7 @@
   "version": "1.2.3",
   "description": "fast and secure storage for iOS and Android",
   "source": "./src/index.tsx",
+  "react-native": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "types": "./lib/typescript/commonjs/src/index.d.ts",
   "module": "./lib/module/index.js",

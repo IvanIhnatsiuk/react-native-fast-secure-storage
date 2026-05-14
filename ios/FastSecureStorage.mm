@@ -5,8 +5,38 @@
 #import <jsi/jsi.h>
 #import "SecureStorage.h"
 #import "SecureStorageHostObject.h"
+#import "RNFastSecureStorageSpecJSI.h"
 
 using namespace facebook;
+
+static void performInstall(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> callInvoker) {
+  handleAppUninstall();
+  securestorageHostObject::install(
+      runtime,
+      callInvoker,
+      &setSecureStorageItem,
+      &getSecureStorageItem,
+      &deleteSecureStorageItem,
+      &clearSecureStorage,
+      &getAllKeys,
+      &getAllItems,
+      &secureStorageHasItem);
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
+
+class FastSecureStorageModule : public react::NativeFastSecureStorageCxxSpec<FastSecureStorageModule> {
+public:
+  FastSecureStorageModule(std::shared_ptr<react::CallInvoker> jsInvoker)
+    : NativeFastSecureStorageCxxSpec(jsInvoker) {}
+
+  bool install(jsi::Runtime &rt) {
+    performInstall(rt, jsInvoker_);
+    return true;
+  }
+};
+
+#endif
 
 @implementation FastSecureStorage
 
@@ -25,28 +55,15 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install)
     return @false;
   }
 
-  auto callInvoker = bridge.jsCallInvoker;
-  handleAppUninstall();
-  securestorageHostObject::install(
-      *(jsi::Runtime *)jsiRuntime,
-      callInvoker,
-      &setSecureStorageItem,
-      &getSecureStorageItem,
-      &deleteSecureStorageItem,
-      &clearSecureStorage,
-      &getAllKeys,
-      &getAllItems,
-      &secureStorageHasItem);
-
+  performInstall(*(jsi::Runtime *)jsiRuntime, bridge.jsCallInvoker);
   return @true;
 }
 
-// Don't compile this code when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
-  return std::make_shared<facebook::react::NativeFastSecureStorageSpecJSI>(params);
+  return std::make_shared<FastSecureStorageModule>(params.jsInvoker);
 }
 #endif
 
