@@ -1,6 +1,6 @@
 {
   "name": "react-native-fast-secure-storage",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "fast and secure storage for iOS and Android",
   "source": "./src/index.tsx",
   "react-native": "./src/index.tsx",
