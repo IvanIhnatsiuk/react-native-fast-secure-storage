@@ -1400,7 +1400,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-  - react-native-fast-secure-storage (1.2.3):
+  - react-native-fast-secure-storage (1.2.4):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2150,7 +2150,7 @@ SPEC CHECKSUMS:
   React-logger: 517377b1d2ba7ac722d47fb2183b98de86632063
   React-Mapbuffer: 45e088dfb58dc326ae20cca1814d3726553c4cad
   React-microtasksnativemodule: ab9d1a05fe1f58ea44a97d307ef1b53463f45a3f
-  react-native-fast-secure-storage: e4dd190b209146e9c0cf220a3f4d8e9af7ea2ded
+  react-native-fast-secure-storage: 146e919f8277992c203f6583475690bf4c60a586
   react-native-safe-area-context: 29044d05d61f2c60d0828c373bd0ebe17eed58d0
   React-NativeModulesApple: b94faa2dce6d8c0a9d722ed7ee27b996d28b62d1
   React-networking: e409d8fb062162da6293e98b77f8d80cf4430e07
