@@ -66,17 +66,11 @@ NSMutableDictionary *generateBaseQueryDictionary(const std::string key)
 
 void clearSecureStorage()
 {
-  NSArray *secItemClasses = @[
-    (__bridge id)kSecClassGenericPassword,
-    (__bridge id)kSecAttrGeneric,
-    (__bridge id)kSecAttrAccount,
-    (__bridge id)kSecClassKey,
-    (__bridge id)kSecAttrService
-  ];
-  for (id secItemClass in secItemClasses) {
-    NSDictionary *spec = @{(__bridge id)kSecClass : secItemClass};
-    SecItemDelete((__bridge CFDictionaryRef)spec);
-  }
+  NSDictionary *query = @{
+    (id)kSecClass : (id)kSecClassGenericPassword,
+    (id)kSecAttrService : getServiceName()
+  };
+  SecItemDelete((__bridge CFDictionaryRef)query);
 }
 
 void handleAppUninstall()
@@ -98,6 +92,7 @@ std::string getAllKeys()
   NSMutableArray<NSString *> *keys = [NSMutableArray array];
   NSDictionary *query = @{
     (id)kSecClass : (id)kSecClassGenericPassword,
+    (id)kSecAttrService : getServiceName(),
     (id)kSecReturnData : (id)kCFBooleanTrue,
     (id)kSecReturnAttributes : (id)kCFBooleanTrue,
     (id)kSecMatchLimit : (id)kSecMatchLimitAll
@@ -130,6 +125,7 @@ std::string getAllItems()
   NSMutableArray<NSDictionary *> *items = [NSMutableArray array];
   NSDictionary *query = @{
     (id)kSecClass : (id)kSecClassGenericPassword,
+    (id)kSecAttrService : getServiceName(),
     (id)kSecReturnData : (id)kCFBooleanTrue,
     (id)kSecReturnAttributes : (id)kCFBooleanTrue,
     (id)kSecMatchLimit : (id)kSecMatchLimitAll
